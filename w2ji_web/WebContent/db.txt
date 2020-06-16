@@ -1,7 +1,0 @@
-
-CREATE TABLE user ( 
-    name 	varchar(45) COMMENT '회원id'  NOT NULL,
-    email	varchar(45) COMMENT '뜻'  NOT NULL,
-    pwd  	int(11) COMMENT '틀린횟수'  NOT NULL 
-    )
-;
