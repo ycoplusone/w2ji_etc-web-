@@ -7,7 +7,7 @@
     <style type="text/css">
         #board {border: 1px solid #ccc;}
         #board td { width:30px; height:30px; padding:5px; text-align: center; }
-        #board td.num {background-color: yellow; border:1px solid #000;  cursor: pointer;}
+        #board td.num {background-color: black; border:1px solid #000;  cursor: pointer;}
     </style>
 </head>
 <body>
@@ -68,7 +68,7 @@
                 for (var x = 0; x < XLEN; x++) { 
                     if (board[y][x] != BLANK) {
                     	//console.log( board[y][x] , x, y  );
-                    	html += '<td class="num" data-index="' + (y * XLEN + x) + '">' + '<img src="s'+board[y][x]+'.jpg">' + '</td>';
+                    	html += '<td class="num" data-index="' + (y * XLEN + x) + '">' + '<img src="'+board[y][x]+'.jpg">' + '</td>';
                     }else {
                     	html += '<td class="blank">&nbsp;</td>'; // 빈칸                    
                     }
