@@ -65,9 +65,13 @@
             var html = '';
             for (var y = 0; y < YLEN; y++) {
                 html += '<tr>';
-                for (var x = 0; x < XLEN; x++) {
-                    if (board[y][x] != BLANK) html += '<td class="num" data-index="' + (y * XLEN + x) + '">' + '<img src="https://www.google.co.kr/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png">' + '</td>';
-                    else html += '<td class="blank">&nbsp;</td>'; // 빈칸
+                for (var x = 0; x < XLEN; x++) { 
+                    if (board[y][x] != BLANK) {
+                    	//console.log( board[y][x] , x, y  );
+                    	html += '<td class="num" data-index="' + (y * XLEN + x) + '">' + '<img src="s'+board[y][x]+'.jpg">' + '</td>';
+                    }else {
+                    	html += '<td class="blank">&nbsp;</td>'; // 빈칸                    
+                    }
                 }
                 html += '</tr>';
             }
