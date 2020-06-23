@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>moveCar</title>
+    <style type="text/css">
+        #board {border: 1px solid #ccc;}
+        #board td { width:30px; height:30px; padding:5px; text-align: center; }
+        #board td.num {background-color: black; border:1px solid #000;  cursor: pointer;}
+    </style>
+</head>
+<body onLoad="init()">
+	<input id="autoBt" type="button" value="시작" onclick="moveAuto()">
+	<input type="button" value="멈춤" onclick="autoStop()">
+	<input type="text" id ="txt">
+	<table>
+		<tr>
+			<td><img src="h1.png" width="200" height="150"></img></td>
+			<td><img src="h2.png" width="200" height="150"></img></td>
+			<td><img src="h3.png" width="200" height="150"></img></td>
+			<td><img src="h4.png" width="200" height="150"></img></td>
+			<td><img src="h5.png" width="200" height="150"></img></td>
+		</tr>
+	</table>
+	<img id="cat" src="car.png" width="30" height="30" style=" position:absolute ; top:200px ; left:10px;"></img>
+	<br>
+	<br>
+	<div id="head"></div>
+	<script src="https://code.jquery.com/jquery-1.11.2.js"></script>
+	<script>
+		var x=10;
+		var step=10;
+		var st;
+		var autoBt;
+		var txt;
+		var cat;
+		
+		function init(){
+			autoBt = document.getElementById("autoBt");
+			txt = document.getElementById("txt");
+			cat = document.getElementById("cat");
+		}
+		
+		function manual(){
+			x += step;
+			step = (x>=1000||x<=10)?-step:step;
+			cat.style.left = x + "px";
+			txt.value=x;
+		}
+		
+		function moveAuto(){
+			st = setInterval("manual()" , 50);
+			autoBt.disabled = true;
+		}
+		
+		function autoStop(){
+			boardEl = $('#head'); // 테이블 엘리먼트
+			boardEl.empty(); // 테이블을 비우고
+			html = '';
+			clearTimeout(st);
+			autoBt.disabled = false;
+			if( txt.value <= 200 ){
+				html = '<img src="h1.png" width="200" height="150"></img>'
+			}else if( txt.value <= 400 ){
+				html = '<img src="h2.png" width="200" height="150"></img>'
+			}else if( txt.value <= 600 ){
+				html = '<img src="h3.png" width="200" height="150"></img>'
+			}else if( txt.value <= 800 ){
+				html = '<img src="h4.png" width="200" height="150"></img>'
+			}else if( txt.value <= 1000 ){
+				html = '<img src="h5.png" width="200" height="150"></img>'
+			}
+			
+			boardEl.html(html);
+		}
+	
+	</script>
+    
+</body>
+</html>
