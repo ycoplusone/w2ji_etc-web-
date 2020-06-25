@@ -15,19 +15,13 @@
 	<input type="button" value="멈춤" onclick="autoStop()">
 	<input type="text" id ="txt">
 	<table>
-		<tr>
-			<td><img src="h1.png" width="200" height="150"></img></td>
-			<td><img src="h2.png" width="200" height="150"></img></td>
-			<td><img src="h3.png" width="200" height="150"></img></td>
-			<td><img src="h4.png" width="200" height="150"></img></td>
-			<td><img src="h5.png" width="200" height="150"></img></td>
-		</tr>
+		<tr id='empty_tr'></tr>
 	</table>
-	<img id="cat" src="car.png" width="30" height="30" style=" position:absolute ; top:200px ; left:10px;"></img>
+	<div id='v'></div>
+	
 	<br>
 	<br>
 	<div id="head"></div>
-	<script src="https://code.jquery.com/jquery-1.11.2.js"></script>
 	<script>
 		var x=10;
 		var step=10;
@@ -35,11 +29,28 @@
 		var autoBt;
 		var txt;
 		var cat;
+		var boardEl;
+		var v;
+		var empty_tr;
 		
 		function init(){
+			empty_tr = document.getElementById("empty_tr");
+			empty_tr.innerHTML  = '<td><img src="h1.png" width="200" height="150"></img></td>';
+			empty_tr.innerHTML += '<td><img src="h2.png" width="200" height="150"></img></td>';
+			empty_tr.innerHTML += '<td><img src="h3.png" width="200" height="150"></img></td>';
+			empty_tr.innerHTML += '<td><img src="h4.png" width="200" height="150"></img></td>';
+			empty_tr.innerHTML += '<td><img src="h5.png" width="200" height="150"></img></td>';
+			
+			
 			autoBt = document.getElementById("autoBt");
 			txt = document.getElementById("txt");
+			
+			boardEl = document.getElementById("head");
+			v = document.getElementById("v");
+			v.innerHTML = '<img id="cat" src="car.png" width="30" height="30" style=" position:absolute ; top:200px ; left:10px;"></img>'; 
 			cat = document.getElementById("cat");
+			
+						
 		}
 		
 		function manual(){
@@ -55,8 +66,9 @@
 		}
 		
 		function autoStop(){
-			boardEl = $('#head'); // 테이블 엘리먼트
-			boardEl.empty(); // 테이블을 비우고
+			
+			//boardEl.empty(); // 테이블을 비우고
+			boardEl.innerHTML='';
 			html = '';
 			clearTimeout(st);
 			autoBt.disabled = false;
@@ -72,7 +84,8 @@
 				html = '<img src="h5.png" width="200" height="150"></img>'
 			}
 			
-			boardEl.html(html);
+			//boardEl.html(html);
+			boardEl.innerHTML= html;
 		}
 	
 	</script>
