@@ -13,22 +13,44 @@
 <body onLoad="init()">
 	<input id="autoBt" type="button" value="시작" onclick="moveAuto()">
 	<input type="button" value="멈춤" onclick="autoStop()">
-	<input type="text" id ="txt">
+	<input type="hidden" id ="txt">
 	<table>
-		<tr id='empty_tr'></tr>		
+		<tr>
+			<td>
+					<table>
+					<tr id='empty_tr'></tr>		
+					</table>
+					<div id='v'></div>
+					<br><br>
+					<table>
+						<tr id='empty_b'></tr>
+					</table>
+					<div id='v2'></div>
+					<br><br>
+					<table>
+						<tr id='empty_p'></tr>
+					</table>
+					<div id='v3'></div>
+					<br><br>
+					<table>
+						<tr id='empty_s'></tr>
+					</table>
+					<div id='v4'></div>
+			
+			</td>
+			<td>
+			
+					<div id="head"></div>
+			
+			</td>
+		</tr>
 	</table>
-	<br>
-	<div id='v'></div>
-	<br>
-	<table>
-		<tr id='empty_b'></tr>
-	</table>
-	<div id='v2'></div>
 	
 	
+	
 	<br>
 	<br>
-	<div id="head"></div>
+	
 	<script>
 		
 		var end_chk = 0;
@@ -44,50 +66,74 @@
 		var v2;
 		var empty_tr;
 		var empty_b;
+		var empty_p;
+		var empty_s;
 		
 		function init(){
 			empty_tr = document.getElementById("empty_tr");
-			empty_tr.innerHTML  = '<td><img src="h1.png" width="200" height="150"></img></td>';
-			empty_tr.innerHTML += '<td><img src="h2.png" width="200" height="150"></img></td>';
-			empty_tr.innerHTML += '<td><img src="h3.png" width="200" height="150"></img></td>';
-			empty_tr.innerHTML += '<td><img src="h4.png" width="200" height="150"></img></td>';
-			empty_tr.innerHTML += '<td><img src="h5.png" width="200" height="150"></img></td>';
+			empty_tr.innerHTML  = '<td><img src="h1.png" width="200" height="100"></img></td>';
+			empty_tr.innerHTML += '<td><img src="h2.png" width="200" height="100"></img></td>';
+			empty_tr.innerHTML += '<td><img src="h3.png" width="200" height="100"></img></td>';
+			empty_tr.innerHTML += '<td><img src="h4.png" width="200" height="100"></img></td>';
+			empty_tr.innerHTML += '<td><img src="h5.png" width="200" height="100"></img></td>';
 			
 			empty_b = document.getElementById("empty_b");
-			empty_b.innerHTML  = '<td><img src="b1.png" width="200" height="150"></img></td>';
-			empty_b.innerHTML += '<td><img src="b2.png" width="200" height="150"></img></td>';
-			empty_b.innerHTML += '<td><img src="b3.png" width="200" height="150"></img></td>';
-			empty_b.innerHTML += '<td><img src="b4.png" width="200" height="150"></img></td>';
-			empty_b.innerHTML += '<td><img src="b5.png" width="200" height="150"></img></td>';
+			empty_b.innerHTML  = '<td><img src="b1.png" width="200" height="100"></img></td>';
+			empty_b.innerHTML += '<td><img src="b2.png" width="200" height="100"></img></td>';
+			empty_b.innerHTML += '<td><img src="b3.png" width="200" height="100"></img></td>';
+			empty_b.innerHTML += '<td><img src="b4.png" width="200" height="100"></img></td>';
+			empty_b.innerHTML += '<td><img src="b5.png" width="200" height="100"></img></td>';
+			
+			empty_p = document.getElementById("empty_p");
+			empty_p.innerHTML  = '<td><img src="p1.png" width="200" height="100"></img></td>';
+			empty_p.innerHTML += '<td><img src="p2.png" width="200" height="100"></img></td>';
+			empty_p.innerHTML += '<td><img src="p3.png" width="200" height="100"></img></td>';
+			empty_p.innerHTML += '<td><img src="p4.png" width="200" height="100"></img></td>';
+			empty_p.innerHTML += '<td><img src="p5.png" width="200" height="100"></img></td>';
+			
+			empty_s = document.getElementById("empty_s");
+			empty_s.innerHTML  = '<td><img src="s1.png" width="200" height="100"></img></td>';
+			empty_s.innerHTML += '<td><img src="s2.png" width="200" height="100"></img></td>';
+			empty_s.innerHTML += '<td><img src="s3.png" width="200" height="100"></img></td>';
+			empty_s.innerHTML += '<td><img src="s4.png" width="200" height="100"></img></td>';
+			empty_s.innerHTML += '<td><img src="s5.png" width="200" height="100"></img></td>';
 			
 			autoBt = document.getElementById("autoBt");
 			txt = document.getElementById("txt");
 			
 			boardEl = document.getElementById("head");
 			v = document.getElementById("v");
-			v.innerHTML = '<img id="cat" src="car.png" width="30" height="30" style=" position:absolute ; top:200px ; left:10px;"></img>'; 
+			v.innerHTML = '<img id="cat" src="car.png" width="30" height="30" style=" position:absolute ; top:140px ; left:10px;"></img>'; 
 			cat = document.getElementById("cat");
 			
 			v2 = document.getElementById("v2");
-			v2.innerHTML = '<img id="cat2" src="car.png" width="30" height="30" style=" position:absolute ; top:400px ; left:10px;"></img>'; 
+			v2.innerHTML = '<img id="cat2" src="car.png" width="30" height="30" style=" position:absolute ; top:290px ; left:10px;"></img>'; 
 			cat2 = document.getElementById("cat2");
 			
+			v3 = document.getElementById("v3");
+			v3.innerHTML = '<img id="cat3" src="car.png" width="30" height="30" style=" position:absolute ; top:450px ; left:10px;"></img>'; 
+			cat3 = document.getElementById("cat3");
+			
+			v4 = document.getElementById("v4");
+			v4.innerHTML = '<img id="cat4" src="car.png" width="30" height="30" style=" position:absolute ; top:600px ; left:10px;"></img>'; 
+			cat4 = document.getElementById("cat4");
 			
 			
 						
 		}
 		
 		function manual(){
+			x += step;
+			step = (x>=1000||x<=10)?-step:step;
+			txt.value=x;
 			if( end_chk == 0 ){
-				x += step;
-				step = (x>=1000||x<=10)?-step:step;
-				cat.style.left = x + "px";
-				txt.value=x;	
+				cat.style.left = x + "px";					
 			}else if( end_chk == 1 ){
-				x += step;
-				step = (x>=1000||x<=10)?-step:step;
-				cat2.style.left = x + "px";
-				txt.value=x;
+				cat2.style.left = x + "px";				
+			}else if( end_chk == 2 ){
+				cat3.style.left = x + "px";				
+			}else if( end_chk == 3 ){
+				cat4.style.left = x + "px";				
 			}
 			
 		}
@@ -106,15 +152,15 @@
 				clearTimeout(st);
 				autoBt.disabled = false;
 				if( txt.value <= 200 ){
-					html = '<img src="h1.png" width="200" height="150"></img>'
+					html += '<img src="h1.png" width="200" height="100"></img>'
 				}else if( txt.value <= 400 ){
-					html = '<img src="h2.png" width="200" height="150"></img>'
+					html += '<img src="h2.png" width="200" height="100"></img>'
 				}else if( txt.value <= 600 ){
-					html = '<img src="h3.png" width="200" height="150"></img>'
+					html += '<img src="h3.png" width="200" height="100"></img>'
 				}else if( txt.value <= 800 ){
-					html = '<img src="h4.png" width="200" height="150"></img>'
+					html += '<img src="h4.png" width="200" height="100"></img>'
 				}else if( txt.value <= 1000 ){
-					html = '<img src="h5.png" width="200" height="150"></img>'
+					html += '<img src="h5.png" width="200" height="100"></img>'
 				}
 				txt.value  =0;				
 				end_chk = 1;
@@ -123,22 +169,54 @@
 				clearTimeout(st);
 				autoBt.disabled = false;
 				if( txt.value <= 200 ){
-					html += '<br><img src="b1.png" width="200" height="150"></img>'
+					html += '<br><img src="b1.png" width="200" height="100"></img>'
 				}else if( txt.value <= 400 ){
-					html += '<br><img src="b2.png" width="200" height="150"></img>'
+					html += '<br><img src="b2.png" width="200" height="100"></img>'
 				}else if( txt.value <= 600 ){
-					html += '<br><img src="b3.png" width="200" height="150"></img>'
+					html += '<br><img src="b3.png" width="200" height="100"></img>'
 				}else if( txt.value <= 800 ){
-					html += '<br><img src="b4.png" width="200" height="150"></img>'
+					html += '<br><img src="b4.png" width="200" height="100"></img>'
 				}else if( txt.value <= 1000 ){
-					html += '<br><img src="b5.png" width="200" height="150"></img>'
+					html += '<br><img src="b5.png" width="200" height="100"></img>'
 				}
+				txt.value  	= 0;				
+				end_chk 	= 2;
+				x=1;
+			}else if( end_chk == 2 ){				
+				clearTimeout(st);
+				autoBt.disabled = false;
+				if( txt.value <= 200 ){
+					html += '<br><img src="p1.png" width="200" height="100"></img>'
+				}else if( txt.value <= 400 ){
+					html += '<br><img src="p2.png" width="200" height="100"></img>'
+				}else if( txt.value <= 600 ){
+					html += '<br><img src="p3.png" width="200" height="100"></img>'
+				}else if( txt.value <= 800 ){
+					html += '<br><img src="p4.png" width="200" height="100"></img>'
+				}else if( txt.value <= 1000 ){
+					html += '<br><img src="p5.png" width="200" height="100"></img>'
+				}
+				txt.value  	= 0;				
+				end_chk 	= 3;
+				x=1;
+			}else{
+				clearTimeout(st);
+				autoBt.disabled = false;
+				if( txt.value <= 200 ){
+					html += '<br><img src="s1.png" width="200" height="100"></img>'
+				}else if( txt.value <= 400 ){
+					html += '<br><img src="s2.png" width="200" height="100"></img>'
+				}else if( txt.value <= 600 ){
+					html += '<br><img src="s3.png" width="200" height="100"></img>'
+				}else if( txt.value <= 800 ){
+					html += '<br><img src="s4.png" width="200" height="100"></img>'
+				}else if( txt.value <= 1000 ){
+					html += '<br><img src="s5.png" width="200" height="100"></img>'
+				}				
 				txt.value  =0;				
 				end_chk = 0;
 			}
-			
-			
-			//boardEl.html(html);
+
 			boardEl.innerHTML= html;
 		}
 	
