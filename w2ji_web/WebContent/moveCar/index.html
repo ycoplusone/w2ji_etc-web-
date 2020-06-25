@@ -55,7 +55,7 @@
 		
 		var end_chk = 0;
 		var x=10;
-		var step=10;
+		var step=50;
 		var st;
 		var autoBt;
 		var txt;
@@ -125,7 +125,7 @@
 		function manual(){
 			x += step;
 			step = (x>=1000||x<=10)?-step:step;
-			txt.value=x;
+			
 			if( end_chk == 0 ){
 				cat.style.left = x + "px";					
 			}else if( end_chk == 1 ){
@@ -135,6 +135,7 @@
 			}else if( end_chk == 3 ){
 				cat4.style.left = x + "px";				
 			}
+			txt.value=x;
 			
 		}
 		
