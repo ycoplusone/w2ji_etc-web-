@@ -268,7 +268,7 @@ public class DAO {
 			sql += " , case when a.use_yn = 'c' then a.num6 else '' end num6 ";
 			sql += " from lottery_info a ";
 			sql += " where a.id = ( select max(id)  from lottery_info  ) ";    
-			//System.out.println( sql );
+			System.out.println( sql );
        		
 			pstmt1 = conn.prepareStatement(sql);
             rs = pstmt1.executeQuery();
@@ -297,32 +297,26 @@ public class DAO {
         try {        	
             conn = getConnection();
             String sql = "";
-			sql += " select ";
-			sql += "   b.nick_nm ";
-			sql += " , b.num1 ";
-			sql += " , case when b.num1 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num1_chk ";
-			sql += " , b.num2 ";
-			sql += " , case when b.num2 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num2_chk ";
-			sql += " , b.num3 ";
-			sql += " , case when b.num3 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num3_chk ";
-			sql += " , b.num4 ";
-			sql += " , case when b.num4 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num4_chk ";
-			sql += " , b.num5 ";
-			sql += " , case when b.num5 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num5_chk ";
-			sql += " , b.num6 ";
-			sql += " , case when b.num6 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end num6_chk ";
-			sql += " , (case when b.num1 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ";
-			sql += " + case when b.num2 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ";
-			sql += " + case when b.num3 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ";
-			sql += " + case when b.num4 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ";
-			sql += " + case when b.num5 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ";
-			sql += " + case when b.num6 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ) as cnt ";
-			sql += " from lottery_info a ";
-			sql += " join user_lottery b on ( a.id = b.info_id ) ";
-			sql += " where 1=1 ";
-			sql += " and a.id = ( select max(id)  from lottery_info  ) ";
-			sql += " and a.use_yn ='c'              ";
-       		
+            sql += " select     ";
+            sql += "   b.nick_nm   ";
+            sql += " , b.num1   ";
+            sql += " , case when a.use_yn !='c' then 'false' else case when b.num1 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end end num1_chk   ";
+            sql += " , b.num2   ";
+            sql += " , case when a.use_yn !='c' then 'false' else case when b.num2 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end end num2_chk   ";
+            sql += " , b.num3   ";
+            sql += " , case when a.use_yn !='c' then 'false' else case when b.num3 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end end num3_chk   ";
+            sql += " , b.num4   ";
+            sql += " , case when a.use_yn !='c' then 'false' else case when b.num4 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end end num4_chk   ";
+            sql += " , b.num5   ";
+            sql += " , case when a.use_yn !='c' then 'false' else case when b.num5 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end end num5_chk   ";
+            sql += " , b.num6   ";
+            sql += " , case when a.use_yn !='c' then 'false' else case when b.num6 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 'true' else 'false' end end num6_chk   ";
+            sql += " , case when a.use_yn !='c' then '' else (case when b.num1 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num2 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num3 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num4 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num5 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num6 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ) end as cnt   ";
+            sql += " from user_lottery b   ";
+            sql += " left outer join lottery_info a on ( a.id = b.info_id )   ";
+            sql += " where 1=1  and a.id = ( select max(id)  from lottery_info  )  ";
+			//sql += " and a.use_yn ='c'              ";
+			System.out.println( sql );
 			pstmt1 = conn.prepareStatement(sql);
             rs = pstmt1.executeQuery();
             while( rs.next() ){

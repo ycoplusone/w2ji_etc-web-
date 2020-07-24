@@ -75,6 +75,7 @@
 
     <div>
         <div class="left">
+        <a href="../index.jsp">홈</a><br>
 		<a href="./addlottery.jsp">회차등록</a><br>
         <a href="./notice.jsp">후원 문구 수정</a><br>
         

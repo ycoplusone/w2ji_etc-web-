@@ -118,12 +118,12 @@
           			<tr>
               			<td><%= cnt %></td>
               			<td><%= vo.getNick_nm() %></td>
-              			<td <% if(vo.getNum1_chk().equals("true")){out.print("background-color: #bbdefb");} %>><%= vo.getNum1() %></td>
-              			<td <% if(vo.getNum2_chk().equals("true")){out.print("background-color: #bbdefb");} %>><%= vo.getNum2() %></td>
-              			<td <% if(vo.getNum3_chk().equals("true")){out.print("background-color: #bbdefb");} %>><%= vo.getNum3() %></td>
-              			<td <% if(vo.getNum4_chk().equals("true")){out.print("background-color: #bbdefb");} %>><%= vo.getNum4() %></td>
-              			<td <% if(vo.getNum5_chk().equals("true")){out.print("background-color: #bbdefb");} %>><%= vo.getNum5() %></td>
-              			<td <% if(vo.getNum6_chk().equals("true")){out.print("background-color: #bbdefb");} %>><%= vo.getNum6() %></td>              			
+              			<td <% if(vo.getNum1_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum1() %></td>
+              			<td <% if(vo.getNum2_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum2() %></td>
+              			<td <% if(vo.getNum3_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum3() %></td>
+              			<td <% if(vo.getNum4_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum4() %></td>
+              			<td <% if(vo.getNum5_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum5() %></td>
+              			<td <% if(vo.getNum6_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum6() %></td>              			
               			<td><%= vo.getCnt() %></td>                			
           			</tr>
     		<% cnt++; }} %>
