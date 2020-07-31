@@ -15,9 +15,12 @@ public class DAO {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-
+            /*
             String url = "jdbc:mysql://localhost:3306/tjs828912";
             conn = DriverManager.getConnection(url, "tjs828912", "qwe123asd");
+            */
+            String url = "jdbc:mysql://localhost:3306/com_mall";
+            conn = DriverManager.getConnection(url, "com", "com01");
         }
         catch (ClassNotFoundException e) {
             System.out.println(" 드라이버 로딩 실패 ");
