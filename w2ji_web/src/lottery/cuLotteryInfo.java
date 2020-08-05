@@ -25,7 +25,7 @@ public class cuLotteryInfo extends HttpServlet {
         System.out.println("--------------cu_lotteryinfo---------------");        
         String id = request.getParameter("id");
         String title = request.getParameter("title");
-        String d_day = request.getParameter("d_day");
+        String d_day = request.getParameter("d_day").replaceAll("[^0-9]","");;
         String use_yn = request.getParameter("use_yn");
         String num1 = request.getParameter("num1");
         String num2 = request.getParameter("num2");
