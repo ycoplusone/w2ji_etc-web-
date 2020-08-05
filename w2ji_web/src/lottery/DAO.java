@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class DAO {
         try {
             conn = getConnection();
             String sql = "";
-            sql += " select a.id , a.title , a.d_day , concat( a.title , '(마감일 : ' , STR_TO_DATE( a.d_day , '%Y%m%d')  , ')') txt ";
+            sql += " select a.id , a.title , a.d_day , concat( a.title , '( 마감일 : ' , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' )  , ' )') txt  ";
             sql += " from lottery_info a where a.use_yn = 'y' ";
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
@@ -124,7 +125,8 @@ public class DAO {
 			sql += " FROM user_lottery a ";
 			sql += " join lottery_info b on ( a.info_id = b.id ) ";
 			sql += " where a.info_id = ? ";
-			sql += " and a.nick_nm = ?   ";          
+			sql += " and a.nick_nm = ?   ";  
+			sql += " order by 1 desc "; 
              
 			pstmt1 = conn.prepareStatement(sql);
 			pstmt1.setInt(	1, Integer.parseInt(id) );
@@ -161,7 +163,7 @@ public class DAO {
             String sql = "";
 			sql += " SELECT a.id, a.info_id, a.nick_nm ";
 			sql += " , concat(a.num1 ,' , ', a.num2,' , ', a.num3,' , ', a.num4,' , ', a.num5,' , ', a.num6  ) mynum ";
-			sql += " , case when b.use_yn='c' then concat('/ ', b.num1 ,' , ', b.num2,' , ', b.num3,' , ', b.num4,' , ', b.num5,' , ', b.num6  ) else '미추첨' end as goal ";
+			sql += " , case when b.use_yn='c' then concat('', b.num1 ,' , ', b.num2,' , ', b.num3,' , ', b.num4,' , ', b.num5,' , ', b.num6  ) else '미추첨' end as goal ";
 			sql += " ,case when b.use_yn = 'c' then ";
 			sql += " (case when a.num1 in  (b.num1 ,b.num2 , b.num3 , b.num4 , b.num5 , b.num6) then 1 else 0 end ";
 			sql += " + case when a.num2 in  (b.num1 ,b.num2 , b.num3 , b.num4 , b.num5 , b.num6) then 1 else 0 end ";
@@ -173,7 +175,8 @@ public class DAO {
 			sql += " FROM user_lottery a ";
 			sql += " join lottery_info b on ( a.info_id = b.id ) ";
 			sql += " where a.info_id = ? ";
-			sql += " and a.nick_nm = ?   ";          
+			sql += " and a.nick_nm = ?   ";   
+			sql += " order by 1 desc";
              
 			pstmt1 = conn.prepareStatement(sql);
 			pstmt1.setInt(	1, Integer.parseInt(id) );
@@ -208,8 +211,8 @@ public class DAO {
         try {        	
             conn = getConnection();
             String sql = "";
-            sql += " select a.id , concat( a.title , '(마감일 : ' , STR_TO_DATE( a.d_day , '%Y%m%d')  , ')') txt "; 
-            sql += " from lottery_info a where a.use_yn in( 'c','y') order by 1 ";
+            sql += " select a.id , concat( a.title , ' ( 마감일 : ' , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' )  , ' )') txt  "; 
+            sql += " from lottery_info a where a.use_yn in( 'c','y') order by 1 desc ";
              
 			pstmt1 = conn.prepareStatement(sql);
             rs = pstmt1.executeQuery();
@@ -404,7 +407,7 @@ public class DAO {
             conn = getConnection();
             String sql = "";
 			sql += " select ";
-			sql += " a.id , a.title , a.d_day  , a.num1  , a.num2 , a.num3 , a.num4 , a.num5 , a.num6 , a.use_yn , case when a.use_yn = 'y' then '접수중' else '마감' end use_nm ";
+			sql += " a.id , a.title ,  date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' ) d_day  , a.num1  , a.num2 , a.num3 , a.num4 , a.num5 , a.num6 , a.use_yn , case when a.use_yn = 'y' then '접수중' else '마감' end use_nm ";
 			sql += " from lottery_info a ";
 			sql += " order by 1 desc ";    
        		
@@ -583,6 +586,79 @@ public class DAO {
         }
         return result;
     }  
+    
+    
+    //아이디 체크
+    public List<String[]> id_check(String id ){
+    	boolean result = false;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        PreparedStatement pstmt1 = null;
+        ResultSet rs = null;
+        String sql="";        
+        //String str[] = new String[2];
+        List<String[]> list = new ArrayList<String[]>();
+        
+        try {            
+            conn = getConnection();
+            sql += " select   count(1) id_cnt "; 
+            sql += " , case when  DATE_FORMAT( DATE_ADD(update_dt, INTERVAL 8 DAY)  , '%Y%m%d') <=  DATE_FORMAT( now() , '%Y%m%d' )  then 'f' else 't' end as id_val ";
+            sql += " from lottery_member  ";
+            sql += " where nick_nm = '"+id+"'  ";           
+            
+			pstmt1 = conn.prepareStatement(sql);
+            rs = pstmt1.executeQuery();
+            
+            rs.next();
+            String str[] = new String[2];
+            str[0] = rs.getString(1);
+            str[1] = rs.getString(2);
+            list.add(str);
+        }catch (SQLException e) {
+            System.out.println("에러: " + e);
+        }
+        return list;
+    }// 아이디 체크 끝
+    
+    public boolean id_create(String id ) {
+    	System.out.println("server - id_create ");
+    	boolean result = false;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql = "";
+        try {
+        	conn = getConnection();
+        	
+        	sql = "select count(1) cnt from lottery_member where nick_nm = '"+id+"' ";
+        	pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();            
+            rs.next();
+            
+            if( rs.getString(1).equals("1") ){
+            	result = false;
+            }else{
+            	sql ="";
+               	sql +=" INSERT INTO lottery_member(nick_nm, update_dt)  VALUES('"+id+"', now())  ";
+               	pstmt = conn.prepareStatement(sql);
+                int count = pstmt.executeUpdate();
+                result = (count == 1);
+            }
+               
+                 
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if( conn != null ) {conn.close(); }
+                if( pstmt != null ) { pstmt.close(); }
+            }catch(SQLException e) {   e.printStackTrace(); }
+        }
+        return result;
+    	
+    }
     
     
 }

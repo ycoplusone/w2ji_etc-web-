@@ -32,8 +32,6 @@ public class pastlottery extends HttpServlet {
         jsonobject.addProperty("txt"	, dao_json[3] );*/
         
         String notice = dao.getNotice();
-        
-        
 
         List<String[]> dao_json = dao.getPastLottery();
         JsonArray jsonarray = new JsonArray();        
