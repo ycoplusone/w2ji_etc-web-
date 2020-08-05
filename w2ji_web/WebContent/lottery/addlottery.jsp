@@ -127,7 +127,7 @@
 		        <p><input type="button" id="btn" value="등록" onClick="push()"></p>
 		    </form>
         	<b>목록</b>
-			<table width="700" border="1">
+			<table width="900" border="1">
             	<thead>
             		<tr>
             			<td>순번</td>
