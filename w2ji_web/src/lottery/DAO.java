@@ -659,6 +659,92 @@ public class DAO {
         return result;
     	
     }
+
+    public boolean insert_lottery_gift(
+    	     String _nickname 	,                
+	         String _local 		,
+	         String _rankgift 	,
+	         String _tel 		,
+	         String _kakao		,
+	         String _facebook 	,
+	         String _teletc 	,
+	         String _photo_comment 	,
+	         String _photo_etc 		,         
+	         String _amt 			,
+	         String _prodct 		,	                  
+	         String [] org_file_name ,
+	         String [] chage_file_name 
+    	) {
+    	System.out.println(" insert_lottery_gift ");
+    	boolean result = false;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql = "";
+        
+        String file1 = "";
+        String file1nm ="";
+        String file2 = "";
+        String file2nm ="";
+        String file3 = "";
+        String file3nm ="";
+        
+        if(org_file_name.length>=1) {
+        	file1   = chage_file_name[0];
+        	file1nm = org_file_name[0];
+        }
+        if(org_file_name.length>=2) {
+        	file2   = chage_file_name[1];
+        	file2nm = org_file_name[1];
+        }
+        if(org_file_name.length>=3) {
+        	file3   = chage_file_name[2];
+        	file3nm = org_file_name[2];
+        }
+        
+        try {
+        	conn = getConnection();
+	       	sql +=" INSERT INTO lottery_gift(nick_nm, local, rankgift, tel, kakao, facebook, teletc, file1, file1_nm, file2, file2_nm, file3, file3_nm, comment, etc, amt, prodct, update_dt, info_id)  ";
+	       	sql +=" VALUES(                       ? ,    ? ,       ? ,  ? ,    ? ,       ? ,     ? ,    ? ,       ? ,    ? ,       ? ,    ? ,       ? ,      ? ,  ? ,  ? ,     ? , now()    , ?) ";	       	
+        	
+        	pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1 , _nickname	);
+            pstmt.setString(2 , _local 	);
+            pstmt.setString(3 , _rankgift 	);
+            pstmt.setString(4 , _tel 	);
+            pstmt.setString(5 , _kakao 	);
+            pstmt.setString(6 , _facebook 	);
+            pstmt.setString(7 , _teletc 	);            
+            pstmt.setString(8 , file1 	);
+            pstmt.setString(9 , file1nm 	);            
+            pstmt.setString(10 , file2 	);
+            pstmt.setString(11 , file2nm 	);            
+            pstmt.setString(12 , file3 	);
+            pstmt.setString(13 , file3nm 	);
+            
+            pstmt.setString(14 , _photo_comment 	);
+            pstmt.setString(15 , _photo_etc 	);
+            pstmt.setString(16 , _amt 	);
+            pstmt.setString(17 , _prodct 	);
+            pstmt.setString(18 , "0" 	);
+	       	
+            System.out.println("sql : "+pstmt);
+	       	
+	        int count = pstmt.executeUpdate();
+	        result = (count == 1);
+               
+                 
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if( conn != null ) {conn.close(); }
+                if( pstmt != null ) { pstmt.close(); }
+            }catch(SQLException e) {   e.printStackTrace(); }
+        }
+        return result;
+    	
+    }
     
     
 }
