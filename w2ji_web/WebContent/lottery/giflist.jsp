@@ -6,10 +6,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-    List<LotteryInfo> list = new ArrayList<LotteryInfo>();
+	List<String[]> list = new ArrayList<String[]>();
 	DAO dao = new DAO();
-	list = dao.getLotteryinfo();
-	
+	list = dao.select_lottery_gift("%");	
     String aa = (String)session.getAttribute("admin");
 
 %>
@@ -71,12 +70,13 @@
     function push(){
     	   var form = document.lotteryinfo;
     	   <% if(list != null){
-   		   for(LotteryInfo vo : list){%>
+   		   for(String[] vo : list){%>
    		   <% 
+   		   /*
 	   		   	if( vo.getUse_yn().equals("y") ){
 	   		   		out.print("alert('접수중인 회차가 있으면 등록 할수 없습니다.'); return;");	   		   		
 	   		   		break;
-	   		   	}
+	   		   	}*/
    		   
    		   %>
    		   <% }} %>
@@ -100,69 +100,49 @@
         <div class="left">
         <a href="../index.jsp">홈</a><br>
 		<a href="./addlottery.jsp">회차등록</a><br>        
-        <a href="./notice.jsp">후원 문구 수정</a><br>
-        <a href="./giflist.jsp">선물 리스트</a><br>          
+        <a href="./notice.jsp">후원 문구 수정</a><br>  
+        <a href="./giflist.jsp">선물 리스트</a><br>      
         </div>        
          
-        <div class="right">
-            <b>회차 등록</b>
-            <form action="../cu_lotteryinfo" method="post" name="lotteryinfo" >
-            	<p>
-	            	<input type="hidden" name="id"  id="id" placeholder="번호">
-			        <input type="text" name="title" id="title" placeholder="회차정보">
-			        <input type="text" name="d_day" id="d_day" placeholder="마감일자(ex:20201225)">
-			        
-			        <select name="use_yn" id="use_yn">
-					    <option value="y">접수중</option>
-					    <option value="c">마감</option>
-					</select>			        
-		        </p>
-		        <p>
-		        	<input type="text" name="num1" id="num1" placeholder="번호1">
-		        	<input type="text" name="num2" id="num2" placeholder="번호2">
-		        	<input type="text" name="num3" id="num3" placeholder="번호3">
-		        	<input type="text" name="num4" id="num4" placeholder="번호4">
-		        	<input type="text" name="num5" id="num5" placeholder="번호5">
-		        	<input type="text" name="num6" id="num6" placeholder="번호6">
-		        </p>
-		        <p><input type="button" id="btn" value="등록" onClick="push()"></p>
-		    </form>
+        <div class="right">            
         	<b>목록</b>
-			<table width="900" border="1">
+			<table width="1024" border="1">
             	<thead>
             		<tr>
-            			<td>순번</td>
-            			<td>회차정보</td>
-            			<td>마감일</td>
-            			<td>번호1</td>
-            			<td>번호2</td>
-            			<td>번호3</td>
-            			<td>번호4</td>
-            			<td>번호5</td>
-            			<td>번호6</td>            			
-            			<td>상태</td>   
-            			<td>비고</td>         			
+            			<td>번호</td>
+            			<td>닉네임</td>
+            			<td>지역</td>
+            			<td>전번</td>
+            			<td>카톡</td>
+            			<td>페이스북</td>
+            			<td>금액</td>
+            			<td>물품</td>
+            			<td>사진1</td>
+            			<td>사진2</td>
+            			<td>사진3</td>
+            			<td>기타텍스트</td>
+            			<td>자동반자동</td>       			
             		</tr>
             	</thead>
 				<% if(list != null){
-        		for(LotteryInfo vo : list){%>         			
+        		for(String[] ls : list){
+        		//a.seq, a.nick_nm, a.local, a.rankgift, a.tel, a.kakao,a. facebook, a.teletc, a.file1, a.file1_nm, a.file2, a.file2_nm, a.file3, a.file3_nm, a.comment, a.etc, a.amt, a.prodct, a.update_dt, a.info_id, a.option_yn
+        		//0      1          2         3           4  
+        		%>         			
           			<tr>
-              			<td><%= vo.getId() %></td>
-              			<td><%= vo.getTitle() %></td>
-              			<td><%= vo.getD_day() %></td>
-              			<td><%= vo.getNum1() %></td>
-              			<td><%= vo.getNum2() %></td>
-              			<td><%= vo.getNum3() %></td>
-              			<td><%= vo.getNum4() %></td>
-              			<td><%= vo.getNum5() %></td>
-              			<td><%= vo.getNum6() %></td>
-              			<td><%= vo.getUse_nm() %></td>
-              			<td>
-              				<% if( vo.getUse_yn().equals("y") ){ 
-              					out.print("<input type='button' value='수정' onClick=\"edit('"+vo.getId()+"','"+vo.getTitle()+"','"+vo.getD_day()+"','"+vo.getNum1()+"','"+vo.getNum2()+"','"+vo.getNum3()+"','"+vo.getNum4()+"','"+vo.getNum5()+"','"+vo.getNum6()+"')\" /> "); 
-              				}else{
-              				}%>
-              			</td>                			
+						<td><%= ls[0] %></td>
+            			<td><%= ls[1] %></td>
+            			<td><%= ls[2] %></td>
+            			<td><%= ls[4] %></td>
+            			<td><%= ls[5] %></td>
+            			<td><%= ls[6] %></td>
+            			<td><%= ls[16] %></td>
+            			<td><%= ls[17] %></td>
+            			<td><%= ls[8] %></td>
+            			<td><%= ls[10] %></td>
+            			<td><%= ls[12] %></td>
+            			<td><%= ls[15] %></td>
+            			<td><%= ls[20] %></td>              			                			
           			</tr>
     			<% }} %>
 

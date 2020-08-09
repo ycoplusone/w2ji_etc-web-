@@ -31,7 +31,7 @@ public class DAO {
     }
     
     public String[] getThisLottery(){	// 전체 목록 (), 대여량 기준 정렬(sort) , 대여된 책(rentaled) , 대여 가능한 책리스트(rental)
-        String[] list = new String[4];
+        String[] list = new String[5];
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -40,6 +40,7 @@ public class DAO {
             conn = getConnection();
             String sql = "";
             sql += " select a.id , a.title , a.d_day , concat( a.title , '( 마감일 : ' , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' )  , ' )') txt  ";
+            sql += " , (select IFNULL(max(option_yn),'n') from  lottery_gift where a.id = info_id and nick_nm = 'asdf33' ) auto ";
             sql += " from lottery_info a where a.use_yn = 'y' ";
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
@@ -48,6 +49,7 @@ public class DAO {
             list[1] = rs.getString(2);
             list[2] = rs.getString(3);
             list[3] = rs.getString(4);
+            list[4] = rs.getString(5);
 
         }
         catch (SQLException e) {
@@ -671,7 +673,8 @@ public class DAO {
 	         String _photo_comment 	,
 	         String _photo_etc 		,         
 	         String _amt 			,
-	         String _prodct 		,	                  
+	         String _prodct 		,	  
+	         String _info_id		,
 	         String [] org_file_name ,
 	         String [] chage_file_name 
     	) {
@@ -704,8 +707,8 @@ public class DAO {
         
         try {
         	conn = getConnection();
-	       	sql +=" INSERT INTO lottery_gift(nick_nm, local, rankgift, tel, kakao, facebook, teletc, file1, file1_nm, file2, file2_nm, file3, file3_nm, comment, etc, amt, prodct, update_dt, info_id)  ";
-	       	sql +=" VALUES(                       ? ,    ? ,       ? ,  ? ,    ? ,       ? ,     ? ,    ? ,       ? ,    ? ,       ? ,    ? ,       ? ,      ? ,  ? ,  ? ,     ? , now()    , ?) ";	       	
+	       	sql +=" INSERT INTO lottery_gift(nick_nm, local, rankgift, tel, kakao, facebook, teletc, file1, file1_nm, file2, file2_nm, file3, file3_nm, comment, etc, amt, prodct, update_dt, info_id , option_yn)  ";
+	       	sql +=" VALUES(                       ? ,    ? ,       ? ,  ? ,    ? ,       ? ,     ? ,    ? ,       ? ,    ? ,       ? ,    ? ,       ? ,      ? ,  ? ,  ? ,     ? , now()    , ? , 'n') ";	       	
         	
         	pstmt = conn.prepareStatement(sql);
             pstmt.setString(1 , _nickname	);
@@ -726,7 +729,7 @@ public class DAO {
             pstmt.setString(15 , _photo_etc 	);
             pstmt.setString(16 , _amt 	);
             pstmt.setString(17 , _prodct 	);
-            pstmt.setString(18 , "0" 	);
+            pstmt.setString(18 , _info_id 	);
 	       	
             System.out.println("sql : "+pstmt);
 	       	
@@ -745,6 +748,39 @@ public class DAO {
         return result;
     	
     }
+    
+    public List<String[]> select_lottery_gift(String nickname ){
+    	boolean result = false;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql="";        
+        List<String[]> list = new ArrayList<String[]>();
+        
+        try {            
+			conn = getConnection();
+			sql +=" SELECT ";
+			sql +=" a.seq, a.nick_nm, a.local, a.rankgift, a.tel, a.kakao,a. facebook, a.teletc, a.file1, a.file1_nm, a.file2, a.file2_nm, a.file3, a.file3_nm, a.comment, a.etc, a.amt, a.prodct, a.update_dt, a.info_id, a.option_yn "; 
+			sql +=" FROM lottery_gift a ";
+			sql +=" where a.nick_nm like '"+nickname+"' ";
+			sql +=" order by 1 desc ";
+            
+			pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            
+            while( rs.next() ){
+            	String str[] = new String[21];
+                for(int i = 0 ; 21>i ; i++){
+                	str[i] = rs.getString(i+1);
+                }
+                list.add(str);
+            }
+            
+        }catch (SQLException e) {
+            System.out.println("에러: " + e);
+        }
+        return list;
+    }// 아이디 체크 끝
     
     
 }

@@ -54,6 +54,7 @@ public class fileupload extends HttpServlet {
 	         String _photo_etc 		= multi.getParameter("photo_etc");         
 	         String _amt 			= multi.getParameter("amt");
 	         String _prodct 		= multi.getParameter("prodct");
+	         String _info_id 		= multi.getParameter("info_id");
 	                  
 	         String [] org_file_name = new String[3];
 	         String [] chage_file_name = new String[3];         
@@ -73,7 +74,7 @@ public class fileupload extends HttpServlet {
 		          cnt++;	          
 	        }
 	        JsonObject jsonobject = new JsonObject();
-	        boolean a = dao.insert_lottery_gift(_nickname, _local, _rankgift, _tel, _kakao, _facebook, _teletc, _photo_comment, _photo_etc, _amt, _prodct, org_file_name, chage_file_name); 
+	        boolean a = dao.insert_lottery_gift(_nickname, _local, _rankgift, _tel, _kakao, _facebook, _teletc, _photo_comment, _photo_etc, _amt, _prodct , _info_id , org_file_name, chage_file_name); 
 	        jsonobject.addProperty("boolean", a);
 	        
 	        Gson gson = new GsonBuilder().setPrettyPrinting().create();

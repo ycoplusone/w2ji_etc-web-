@@ -42,6 +42,7 @@ public class query extends HttpServlet {
 
         JsonArray jsonarray = new JsonArray();
         if( div.equals("id_check") ){	//아이디 체크
+        	System.out.println("id_check");
         	dao_json = dao.id_check(p1);
         	for (String[] strings : dao_json) {
         		JsonObject tempjson = new JsonObject();
@@ -51,11 +52,26 @@ public class query extends HttpServlet {
         		}       	
             	jsonarray.add(tempjson);
     		}
-            jsonobject.add("list", jsonarray);       	
+            jsonobject.add("list", jsonarray);     
+            
         }else if( div.equals("id_create") ){	//아이디 생성
+        	System.out.println("id_create");
         	boolean a = dao.id_create(p1);
-        	jsonobject.addProperty("boolean", a);   
-        }        
+        	jsonobject.addProperty("boolean", a);
+        	
+        }else if( div.equals("select_lottery_gift") ){
+        	System.out.println("select_lottery_gift");
+        	dao_json = dao.select_lottery_gift(p1);
+        	for (String[] strings : dao_json) {
+        		JsonObject tempjson = new JsonObject();        		
+        		for( int i = 0 ; strings.length > i ; i++ ){
+        			tempjson.addProperty("c"+i, strings[i]);
+        		}       	
+            	jsonarray.add(tempjson);
+    		}
+            jsonobject.add("list", jsonarray); 
+        	
+        }
         
     
         

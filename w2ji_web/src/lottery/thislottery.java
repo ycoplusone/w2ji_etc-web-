@@ -32,6 +32,7 @@ public class thislottery extends HttpServlet {
         jsonobject.addProperty("title"	, dao_json[1] );
         jsonobject.addProperty("d_day"	, dao_json[2] );
         jsonobject.addProperty("txt"	, dao_json[3] );
+        jsonobject.addProperty("auto"	, dao_json[4] );
 
         /*
         JsonArray jsonarray = new JsonArray();        

@@ -78,6 +78,7 @@
         <a href="../index.jsp">홈</a><br>
 		<a href="./addlottery.jsp">회차등록</a><br>
         <a href="./notice.jsp">후원 문구 수정</a><br>
+        <a href="./giflist.jsp">선물 리스트</a><br>
         
         </div>
          
