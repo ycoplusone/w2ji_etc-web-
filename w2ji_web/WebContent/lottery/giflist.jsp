@@ -8,7 +8,7 @@
 <%
 	List<String[]> list = new ArrayList<String[]>();
 	DAO dao = new DAO();
-	list = dao.select_lottery_gift("%");	
+	list = dao.select_lottery_gift("%" , "%");	
     String aa = (String)session.getAttribute("admin");
 
 %>
@@ -19,6 +19,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>회차등록</title>
     <style>
+    table,th,td{
+    	border:1px solid gray;
+    	border-collapse:collapse;
+    }
+
+    
     div {
         width: 100%;
         height: 1024px;
@@ -42,47 +48,10 @@
     </style>
     <script>
     function edit(id , title , d_day , num1, num2, num3, num4, num5, num6){
-    	console.log(id , title , d_day , num1 , num2 , num3 , num4 , num5 , num6);
-    	var _id = document.getElementById("id");
-    	var _title = document.getElementById("title");
-    	var _d_day = document.getElementById("d_day");
-    	var _num1 = document.getElementById("num1");
-    	var _num2 = document.getElementById("num2");
-    	var _num3 = document.getElementById("num3");
-    	var _num4 = document.getElementById("num4");
-    	var _num5 = document.getElementById("num5");
-    	var _num6 = document.getElementById("num6");
-    	var _btn = document.getElementById("btn");
-    	_btn.value = '수정하기';
-    	_btn.type = 'submit';
-    	_btn.onclick = '';
-    	_id.value = id;
-    	_title.value = title;
-    	_d_day.value = d_day;
-    	_num1.value = num1;
-    	_num2.value = num2;
-    	_num3.value = num3;
-    	_num4.value = num4;
-    	_num5.value = num5;
-    	_num6.value = num6;
+    	
     }    
     
-    function push(){
-    	   var form = document.lotteryinfo;
-    	   <% if(list != null){
-   		   for(String[] vo : list){%>
-   		   <% 
-   		   /*
-	   		   	if( vo.getUse_yn().equals("y") ){
-	   		   		out.print("alert('접수중인 회차가 있으면 등록 할수 없습니다.'); return;");	   		   		
-	   		   		break;
-	   		   	}*/
-   		   
-   		   %>
-   		   <% }} %>
-   			form.submit(); 
-    	    
-    }
+   
     <%
     	if(aa ==null || aa.equals("")){
     		out.print(" window.location.href = '../index.jsp'; ");
@@ -92,6 +61,37 @@
 	    	out.print(" window.location.href = '../index.jsp'; ");
 	    }
     %>
+    
+    function fnImgPop(url){
+    	  var img=new Image();
+    	  img.src=url;
+    	  var img_width=img.width+75;
+    	  var win_width=img.width;
+    	  var img_height=img.height+125;
+    	  var win=img.height;
+    	  var OpenWindow=window.open('','_blank', 'width='+img_width+', height='+img_height+', menubars=no, scrollbars=auto');
+    	  OpenWindow.document.write("<style>body{margin:0px;}</style><img src='"+url+"' width='"+win_width+"'>");
+    }
+    
+    function option_on(seq) {
+    	var _from = document.getElementById("frmSubmit");
+    	var _seq = document.getElementById("seq");
+    	var _yn  = document.getElementById("yn");
+    	_seq.value= seq;
+    	_yn.value = 'n';
+    	_from.submit();
+    }
+    
+    function option_off( seq ) {
+    	var _from = document.getElementById("frmSubmit");
+    	var _seq = document.getElementById("seq");
+    	var _yn  = document.getElementById("yn");
+    	_seq.value= seq;
+    	_yn.value = 'y';
+    	_from.submit();
+    	
+    }
+    
     </script>
 </head>
 <body>
@@ -101,27 +101,35 @@
         <a href="../index.jsp">홈</a><br>
 		<a href="./addlottery.jsp">회차등록</a><br>        
         <a href="./notice.jsp">후원 문구 수정</a><br>  
-        <a href="./giflist.jsp">선물 리스트</a><br>      
+        <a href="./giflist.jsp">선물 리스트</a><br>     
+		<a href="./winning_list.jsp">당첨 정보</a><br>
         </div>        
+         
+         <form id='frmSubmit' action='../option_yn'>
+         	<input type='hidden' name='seq' id='seq' value=''>
+         	<input type='hidden' name='yn'  id='yn'  value=''>
+         </form>
          
         <div class="right">            
         	<b>목록</b>
 			<table width="1024" border="1">
             	<thead>
             		<tr>
-            			<td>번호</td>
-            			<td>닉네임</td>
-            			<td>지역</td>
-            			<td>전번</td>
-            			<td>카톡</td>
-            			<td>페이스북</td>
-            			<td>금액</td>
-            			<td>물품</td>
-            			<td>사진1</td>
-            			<td>사진2</td>
-            			<td>사진3</td>
-            			<td>기타텍스트</td>
-            			<td>자동반자동</td>       			
+            			<td><center>번호</center></td>
+            			<td><center>닉네임</center></td>
+            			<td><center>지역</center></td>
+            			<td><center>전번</center></td>
+            			<td><center>카톡</center></td>
+            			<td><center>페이스북</center></td>
+            			<td><center>금액</center></td>
+            			<td><center>물품</center></td>
+            			<td><center>사진1</center></td>
+            			<td><center>사진2</center></td>
+            			<td><center>사진3</center></td>
+            			<td><center>기타<br>텍스트</center></td>
+            			<td><center>자동<br>반자동</center></td>
+            			<td><center>비고</center></td>
+    			
             		</tr>
             	</thead>
 				<% if(list != null){
@@ -138,11 +146,48 @@
             			<td><%= ls[6] %></td>
             			<td><%= ls[16] %></td>
             			<td><%= ls[17] %></td>
-            			<td><%= ls[8] %></td>
-            			<td><%= ls[10] %></td>
-            			<td><%= ls[12] %></td>
+            			<td>
+            			<% 
+            				if( ls[8]==null||ls[8].equals("") ){
+            					out.print("없음");
+            				}else{
+            					out.print("<img src='../upload/"+ls[8]+"' width='50' height='50' onclick='fnImgPop(this.src)'></img>");
+            				}
+            			%>
+            			</td>
+            			<td>
+            			<% 
+            				if( ls[10]==null||ls[10].equals("") ){
+            					out.print("없음");
+            				}else{
+            					out.print("<img src='../upload/"+ls[10]+"' width='50' height='50' onclick='fnImgPop(this.src)'></img>");
+            				}
+            			%>
+            			</td>
+            			<td>
+            			<% 
+            				if( ls[12]==null||ls[12].equals("") ){
+            					out.print("없음");
+            				}else{
+            					out.print("<img src='../upload/"+ls[12]+"' width='50' height='50' onclick='fnImgPop(this.src)'></img>");
+            				}
+            			%>
+            			</td>
             			<td><%= ls[15] %></td>
-            			<td><%= ls[20] %></td>              			                			
+            			<td>
+            			<% 
+            				if(ls[20].equals("y")){
+            					out.print("자동설정 ");
+            					out.print("<button onclick=\"option_on(\'"+ls[0]+"\')\">변경</button>");
+            				}else{
+            					out.print("　미설정 ");
+            					out.print("<button onclick=\"option_off(\'"+ls[0]+"\');\">변경</button>");
+            				}
+            			%>
+            			</td>
+            			<td></td>  
+ 
+       			                			
           			</tr>
     			<% }} %>
 

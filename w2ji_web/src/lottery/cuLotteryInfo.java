@@ -26,7 +26,8 @@ public class cuLotteryInfo extends HttpServlet {
         String id = request.getParameter("id");
         String title = request.getParameter("title");
         String d_day = request.getParameter("d_day").replaceAll("[^0-9]","");;
-        String use_yn = request.getParameter("use_yn");
+        
+        String use_yn = "y";//request.getParameter("use_yn");
         String num1 = request.getParameter("num1");
         String num2 = request.getParameter("num2");
         String num3 = request.getParameter("num3");

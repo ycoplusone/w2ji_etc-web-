@@ -16,12 +16,15 @@ public class DAO {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            /*
+            
             String url = "jdbc:mysql://localhost:3306/tjs828912";
             conn = DriverManager.getConnection(url, "tjs828912", "qwe123asd");
-            */
+            
+            /*
             String url = "jdbc:mysql://localhost:3306/com_mall";
             conn = DriverManager.getConnection(url, "com", "com01");
+            */
+            
         }
         catch (ClassNotFoundException e) {
             System.out.println(" 드라이버 로딩 실패 ");
@@ -30,8 +33,8 @@ public class DAO {
         return conn;
     }
     
-    public String[] getThisLottery(){	// 전체 목록 (), 대여량 기준 정렬(sort) , 대여된 책(rentaled) , 대여 가능한 책리스트(rental)
-        String[] list = new String[5];
+    public String[] getThisLottery(String nickname){	// 전체 목록 (), 대여량 기준 정렬(sort) , 대여된 책(rentaled) , 대여 가능한 책리스트(rental)
+        String[] list = new String[6];
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -39,9 +42,13 @@ public class DAO {
         try {
             conn = getConnection();
             String sql = "";
-            sql += " select a.id , a.title , a.d_day , concat( a.title , '( 마감일 : ' , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' )  , ' )') txt  ";
-            sql += " , (select IFNULL(max(option_yn),'n') from  lottery_gift where a.id = info_id and nick_nm = 'asdf33' ) auto ";
-            sql += " from lottery_info a where a.use_yn = 'y' ";
+            sql += " select a.id , a.title , a.d_day , concat( a.title , if( a.use_yn='c',' - 마감 - ' ,' - 진행중 - ')  , '( 마감일 : ' , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' )  , ' )') txt  ";
+            sql += " , (select IFNULL(max(option_yn),'n') from  lottery_gift where a.id = info_id and nick_nm = '"+nickname+"' ) auto ";
+            sql += " , a.use_yn ";
+            sql += " from lottery_info a where a.id = ( select max( id ) from lottery_info )  ";
+            
+            System.out.println("getThisLottery = sql : "+sql);
+            
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
             rs.next();
@@ -50,6 +57,7 @@ public class DAO {
             list[2] = rs.getString(3);
             list[3] = rs.getString(4);
             list[4] = rs.getString(5);
+            list[5] = rs.getString(6);
 
         }
         catch (SQLException e) {
@@ -213,15 +221,16 @@ public class DAO {
         try {        	
             conn = getConnection();
             String sql = "";
-            sql += " select a.id , concat( a.title , ' ( 마감일 : ' , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' )  , ' )') txt  "; 
+            sql += " select a.id , ifnull( concat( a.title , if( a.use_yn='c',' - 마감 - ' ,' - 진행중 - ') , ' ( 마감일 : ' , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' ) ,  ' )') ,'정보 없음') txt  , a.use_yn    "; 
             sql += " from lottery_info a where a.use_yn in( 'c','y') order by 1 desc ";
              
 			pstmt1 = conn.prepareStatement(sql);
             rs = pstmt1.executeQuery();
             while(rs.next()) {
-            	String [] vo = new String[2];
+            	String [] vo = new String[3];
             	vo[0] = rs.getString(1); // id
             	vo[1] = rs.getString(2); // txt
+            	vo[2] = rs.getString(3); // txt
                 list.add(vo);
             }
         }
@@ -267,7 +276,7 @@ public class DAO {
             conn = getConnection();
             String sql = "";
 			sql += " select ";
-			sql += " a.id , a.title , STR_TO_DATE( a.d_day , '%Y%m%d') d_day "; 
+			sql += " a.id , a.title , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' ) d_day "; 
 			sql += " , case when a.use_yn = 'c' then a.num1 else '' end num1 ";
 			sql += " , case when a.use_yn = 'c' then a.num2 else '' end num2 ";
 			sql += " , case when a.use_yn = 'c' then a.num3 else '' end num3 ";
@@ -357,7 +366,7 @@ public class DAO {
     	return lll;    			
     }
 
-    public List<LotterySummery> getThisLotterySummery() {
+    public List<LotterySummery> getThisLotterySummery(String id) {
     	List<LotterySummery> lls = new ArrayList<LotterySummery>();
     	Connection conn = null;
         PreparedStatement pstmt1 = null;
@@ -380,10 +389,12 @@ public class DAO {
 			sql += " from lottery_info a ";
 			sql += " join user_lottery b on ( a.id = b.info_id ) ";
 			sql += " where 1=1 ";
-			sql += " and a.id = ( select max(id)  from lottery_info  ) ";
+			sql += " and a.id = '"+id+"' ";
 			sql += " and a.use_yn ='c' ";
 			sql += " ) a ";
+			sql += " where a.cnt != 0 ";
 			sql += " group by a.cnt desc ";
+			System.out.println(sql);
        		
 			pstmt1 = conn.prepareStatement(sql);
             rs = pstmt1.executeQuery();
@@ -398,6 +409,30 @@ public class DAO {
         }  
     	return lls;	
     }  
+    
+    public List<String[]> getLotteryInfo() {
+    	List<String[]> lls = new ArrayList<String[]>();
+    	Connection conn = null;
+        PreparedStatement pstmt1 = null;
+        ResultSet rs = null;
+        try {        	
+            conn = getConnection();
+            String sql = "";
+			sql += " select a.id , concat( a.title , ' ( 마감일:', date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' ) ,' )' ) txt from lottery_info a where use_yn='c' order by 1 desc ";			
+       		
+			pstmt1 = conn.prepareStatement(sql);
+            rs = pstmt1.executeQuery();
+            while( rs.next() ){
+            	String[] l_list = new String[2];
+            	l_list[0] =rs.getString(1);
+            	l_list[1] =rs.getString(2);
+            	lls.add(l_list);
+            }
+        }catch (SQLException e) {
+            System.out.println("getLotteryInfo 에러: " + e);
+        }  
+    	return lls;	
+    } 
     
     // 회차 정보 전체 리스트
     public List<LotteryInfo> getLotteryinfo() {
@@ -749,7 +784,7 @@ public class DAO {
     	
     }
     
-    public List<String[]> select_lottery_gift(String nickname ){
+    public List<String[]> select_lottery_gift(String nickname , String info_id){
     	boolean result = false;
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -763,8 +798,14 @@ public class DAO {
 			sql +=" a.seq, a.nick_nm, a.local, a.rankgift, a.tel, a.kakao,a. facebook, a.teletc, a.file1, a.file1_nm, a.file2, a.file2_nm, a.file3, a.file3_nm, a.comment, a.etc, a.amt, a.prodct, a.update_dt, a.info_id, a.option_yn "; 
 			sql +=" FROM lottery_gift a ";
 			sql +=" where a.nick_nm like '"+nickname+"' ";
+			if(info_id.equals("test")) {				
+			}else {
+				sql += " and a.info_id like '"+info_id+"' ";
+			}
+			
 			sql +=" order by 1 desc ";
             
+			System.out.println("select_lottery_gift : "+sql);
 			pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
             
@@ -782,5 +823,63 @@ public class DAO {
         return list;
     }// 아이디 체크 끝
     
+    
+    public boolean update_gift_option(String seq , String yn ) {
+        boolean result = false;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = getConnection();
+            String sql = ""; //"update book_store set rental_yn = 'Y' where rental_yn='N' and id = ?";
+        
+            	sql +=" UPDATE lottery_gift SET OPTION_YN = ? WHERE SEQ = ?  ";            	
+            	pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1 , yn		);
+                pstmt.setString(2 , seq 	);              
+                
+                int count = pstmt.executeUpdate();
+                result = (count == 1);   
+            
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if( conn != null ) {conn.close(); }
+                if( pstmt != null ) { pstmt.close(); }
+            }catch(SQLException e) {   e.printStackTrace(); }
+        }
+        return result;
+    }  
+    
+    
+    public boolean update_use_yn(String seq ) {
+        boolean result = false;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = getConnection();
+            String sql = ""; //"update book_store set rental_yn = 'Y' where rental_yn='N' and id = ?";
+        
+            	sql +=" UPDATE lottery_info SET use_yn = 'c' WHERE id = ?  ";            	
+            	pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1 , seq		);
+                System.out.println("update_use_yn : "+sql);
+                int count = pstmt.executeUpdate();
+                result = (count == 1);   
+            
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if( conn != null ) {conn.close(); }
+                if( pstmt != null ) { pstmt.close(); }
+            }catch(SQLException e) {   e.printStackTrace(); }
+        }
+        return result;
+    }      
     
 }

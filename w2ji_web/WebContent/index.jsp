@@ -17,9 +17,7 @@
 	List<LotteryList> l_lotterylist =  new ArrayList<LotteryList>();
 	l_lotterylist = dao.getThisLotteryList();
 	
-	// 담첨 요약 
-	List<LotterySummery> l_lotterysummery =  new ArrayList<LotterySummery>();
-	l_lotterysummery = dao.getThisLotterySummery();
+	
 	
 %>
 
@@ -29,6 +27,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>환영합니다.</title>
          <style>
+
+
+
     div{
         width: 100%;
        
@@ -64,7 +65,7 @@
 
 <div>
         <div class="left">
-		<a href="./lottery.zip" download>다 운 받 기</a>
+		<a href="http://tjs828912.cafe24.com/file/lottery.zip" download>다 운 받 기</a>
         </div>        
         <div class="right">            
     	<a href="./lottery/login.jsp">관 리 자 접 속</a><br>        
@@ -75,16 +76,20 @@
 <table>
 	<tr>
 		<td>
+		<center>
 		<% if(lotteryinfo != null){
-			out.print("<b>"+ lotteryinfo.getTitle()+"</b>" );
+			out.print("<b> 회차 정보 : "+ lotteryinfo.getTitle()+"</b>" );
 		} %>		
+		</center>
 		</td>
 	</tr>
 	<tr>
 		<td>
+		<center>
 		<% if(lotteryinfo != null){
 			out.print("마감일 : "+ lotteryinfo.getD_day() );
-		} %>		
+		} %>	
+		</center>	
 		</td>
 	</tr>
 
@@ -95,9 +100,9 @@
 </div>
 
 <div class="body">
-	<div class="left">
+	<div class="center">
 	
-	<table width="600" border="1">
+	<table width="600" border="1" style="border:1px solid gray;   	border-collapse:collapse;">
             	<thead>
             		<tr>
             			<td>순서</td>
@@ -132,26 +137,7 @@
 	
 	
 	</div>
-	<div class="right">
-	
-	<table width="200" border="1">
-            	<thead>
-            		<tr>
-            			<td>당첨그룹</td>
-            			<td>누적</td>
-            		</tr>
-            	</thead>
-            <% if(l_lotterysummery != null){            	
-        		for(LotterySummery vo : l_lotterysummery){%>         			
-          			<tr>
-              			<td><%= vo.getCnt() %></td>
-              			<td><%= vo.getTot_cnt() %></td>                			
-          			</tr>
-    		<% }} %>
-    		</table>
-	
-	
-	</div>
+
 </div>
 
 

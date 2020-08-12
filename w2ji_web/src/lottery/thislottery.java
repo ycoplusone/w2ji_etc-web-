@@ -23,9 +23,10 @@ public class thislottery extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         System.out.println("--------------getTest doGet---------------");        
-
+        String nick_name = request.getParameter("nickname");
+        System.out.println(nick_name);
         DAO dao = new DAO();
-        String[] dao_json = dao.getThisLottery();
+        String[] dao_json = dao.getThisLottery(nick_name);
         
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("id"		, dao_json[0] );
@@ -33,6 +34,7 @@ public class thislottery extends HttpServlet {
         jsonobject.addProperty("d_day"	, dao_json[2] );
         jsonobject.addProperty("txt"	, dao_json[3] );
         jsonobject.addProperty("auto"	, dao_json[4] );
+        jsonobject.addProperty("use_yn"	, dao_json[5] );
 
         /*
         JsonArray jsonarray = new JsonArray();        

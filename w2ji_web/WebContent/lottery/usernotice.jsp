@@ -16,6 +16,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>후원 문구 수정</title>
     <style>
+    table,th,td{
+    	border:1px solid gray;
+    	border-collapse:collapse;
+    }
     div {
         width: 100%;
         height: 1024px;

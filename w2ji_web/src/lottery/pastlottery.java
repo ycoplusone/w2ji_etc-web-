@@ -41,6 +41,7 @@ public class pastlottery extends HttpServlet {
         	JsonObject tempjson = new JsonObject();
         	tempjson.addProperty("id"		, strings[0]);
         	tempjson.addProperty("txt"		, strings[1]);
+        	tempjson.addProperty("use_yn"		, strings[2]);
         	jsonarray.add(tempjson);
 		}
         jsonobject.add("list", jsonarray);

@@ -17,6 +17,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>후원 문구 수정</title>
     <style>
+    table,th,td{
+    	border:1px solid gray;
+    	border-collapse:collapse;
+    }
     div {
         width: 100%;
         height: 1024px;
@@ -79,6 +83,7 @@
 		<a href="./addlottery.jsp">회차등록</a><br>
         <a href="./notice.jsp">후원 문구 수정</a><br>
         <a href="./giflist.jsp">선물 리스트</a><br>
+        <a href="./winning_list.jsp">당첨 정보</a><br>
         
         </div>
          

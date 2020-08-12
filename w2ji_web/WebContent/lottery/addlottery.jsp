@@ -20,6 +20,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>회차등록</title>
     <style>
+    table,th,td{
+    	border:1px solid gray;
+    	border-collapse:collapse;
+    }
     div {
         width: 100%;
         height: 1024px;
@@ -92,6 +96,14 @@
 	    	out.print(" window.location.href = '../index.jsp'; ");
 	    }
     %>
+    
+    
+    function use_yn(seq) {
+    	var _from = document.getElementById("frmSubmit");
+    	var _seq = document.getElementById("seq");
+    	_seq.value= seq;
+    	_from.submit();
+    }
     </script>
 </head>
 <body>
@@ -101,47 +113,78 @@
         <a href="../index.jsp">홈</a><br>
 		<a href="./addlottery.jsp">회차등록</a><br>        
         <a href="./notice.jsp">후원 문구 수정</a><br>
-        <a href="./giflist.jsp">선물 리스트</a><br>          
+        <a href="./giflist.jsp">선물 리스트</a><br>   
+		<a href="./winning_list.jsp">당첨 정보</a><br>      
         </div>        
          
         <div class="right">
             <b>회차 등록</b>
+			<form id='frmSubmit' action='../use_yn'>
+         		<input type='hidden' name='seq' id='seq' value=''>
+         	</form>
+            
+            
             <form action="../cu_lotteryinfo" method="post" name="lotteryinfo" >
-            	<p>
-	            	<input type="hidden" name="id"  id="id" placeholder="번호">
-			        <input type="text" name="title" id="title" placeholder="회차정보">
-			        <input type="text" name="d_day" id="d_day" placeholder="마감일자(ex:20201225)">
-			        
-			        <select name="use_yn" id="use_yn">
-					    <option value="y">접수중</option>
-					    <option value="c">마감</option>
-					</select>			        
-		        </p>
-		        <p>
-		        	<input type="text" name="num1" id="num1" placeholder="번호1">
-		        	<input type="text" name="num2" id="num2" placeholder="번호2">
-		        	<input type="text" name="num3" id="num3" placeholder="번호3">
-		        	<input type="text" name="num4" id="num4" placeholder="번호4">
-		        	<input type="text" name="num5" id="num5" placeholder="번호5">
-		        	<input type="text" name="num6" id="num6" placeholder="번호6">
-		        </p>
-		        <p><input type="button" id="btn" value="등록" onClick="push()"></p>
+            	<input type="hidden" name="id"  id="id" placeholder="번호">
+            	<table   style='border-left:0;border-right:0;border-bottom:0;border-top:0'>
+            		<tr>
+            			<td>회차정보</td>
+            			<td><input type="text" name="title" id="title" placeholder="회차정보" autocomplete="off"></td>
+            		</tr>
+            		
+            		<tr>
+            			<td>마감일자(ex: 2020.08.15 14:15:15 )</td>
+            			<td><input type="text" name="d_day" id="d_day" placeholder="마감일자(ex:20201225)" autocomplete="off"></td>
+            		</tr>
+            		
+            		<tr>
+            			<td>1번</td>
+            			<td><input type="text" name="num1" id="num1" placeholder="번호1" autocomplete="off"></td>
+            		</tr>
+            		<tr>
+            			<td>2번</td>
+            			<td><input type="text" name="num2" id="num2" placeholder="번호2" autocomplete="off"></td>
+            		</tr>
+            		<tr>
+            			<td>3번</td>
+            			<td><input type="text" name="num3" id="num3" placeholder="번호3" autocomplete="off"></td>
+            		</tr>
+            		<tr>
+            			<td>4번</td>
+            			<td><input type="text" name="num4" id="num4" placeholder="번호4" autocomplete="off"></td>
+            		</tr>
+            		<tr>
+            			<td>5번</td>
+            			<td><input type="text" name="num5" id="num5" placeholder="번호5" autocomplete="off"></td>
+            		</tr>
+            		<tr>
+            			<td>6번</td>
+            			<td><input type="text" name="num6" id="num6" placeholder="번호6" autocomplete="off"></td>
+            		</tr>
+            		<tr>
+            			<td colspan=2><input type="button" id="btn" value="등록" onClick="push()" widht='150'></td>
+            		</tr>
+            		
+            	</table>
+
+		        
 		    </form>
+		    <br><br>
         	<b>목록</b>
 			<table width="900" border="1">
             	<thead>
             		<tr>
-            			<td>순번</td>
-            			<td>회차정보</td>
-            			<td>마감일</td>
-            			<td>번호1</td>
-            			<td>번호2</td>
-            			<td>번호3</td>
-            			<td>번호4</td>
-            			<td>번호5</td>
-            			<td>번호6</td>            			
-            			<td>상태</td>   
-            			<td>비고</td>         			
+            			<td><center>순번</center></td>
+            			<td><center>회차정보</center></td>
+            			<td><center>마감일</center></td>
+            			<td><center>번호1</center></td>
+            			<td><center>번호2</center></td>
+            			<td><center>번호3</center></td>
+            			<td><center>번호4</center></td>
+            			<td><center>번호5</center></td>
+            			<td><center>번호6</center></td>            			
+            			<td><center>상태</center></td>   
+            			<td><center>비고</center></td>         			
             		</tr>
             	</thead>
 				<% if(list != null){
@@ -156,7 +199,19 @@
               			<td><%= vo.getNum4() %></td>
               			<td><%= vo.getNum5() %></td>
               			<td><%= vo.getNum6() %></td>
-              			<td><%= vo.getUse_nm() %></td>
+              			<td>
+              			<% 
+            				if( vo.getUse_nm().equals("접수중") ){
+            					out.print("접수중 ");
+            					out.print("<button onclick=\"use_yn(\'"+vo.getId()+"\')\">마감하기</button>");
+            				}else{
+            					out.print("마감");            					
+            				}
+              			
+              			
+            			%>
+              			
+              			</td>
               			<td>
               				<% if( vo.getUse_yn().equals("y") ){ 
               					out.print("<input type='button' value='수정' onClick=\"edit('"+vo.getId()+"','"+vo.getTitle()+"','"+vo.getD_day()+"','"+vo.getNum1()+"','"+vo.getNum2()+"','"+vo.getNum3()+"','"+vo.getNum4()+"','"+vo.getNum5()+"','"+vo.getNum6()+"')\" /> "); 

@@ -60,8 +60,8 @@ public class query extends HttpServlet {
         	jsonobject.addProperty("boolean", a);
         	
         }else if( div.equals("select_lottery_gift") ){
-        	System.out.println("select_lottery_gift");
-        	dao_json = dao.select_lottery_gift(p1);
+        	System.out.println("select_lottery_gift : "+p1+" : "+p2);
+        	dao_json = dao.select_lottery_gift(p1 , p2);
         	for (String[] strings : dao_json) {
         		JsonObject tempjson = new JsonObject();        		
         		for( int i = 0 ; strings.length > i ; i++ ){
