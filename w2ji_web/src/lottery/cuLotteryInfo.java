@@ -25,7 +25,7 @@ public class cuLotteryInfo extends HttpServlet {
         System.out.println("--------------cu_lotteryinfo---------------");        
         String id = request.getParameter("id");
         String title = request.getParameter("title");
-        String d_day = request.getParameter("d_day").replaceAll("[^0-9]","");;
+        //String d_day = request.getParameter("d_day").replaceAll("[^0-9]","");;
         
         String use_yn = "y";//request.getParameter("use_yn");
         String num1 = request.getParameter("num1");
@@ -37,7 +37,6 @@ public class cuLotteryInfo extends HttpServlet {
         LotteryInfo li = new LotteryInfo();
         li.setId(id);
         li.setTitle(title);
-        li.setD_day(d_day);
         li.setUse_yn(use_yn);
         li.setNum1(num1);
         li.setNum2(num2);
@@ -45,7 +44,7 @@ public class cuLotteryInfo extends HttpServlet {
         li.setNum4(num4);
         li.setNum5(num5);
         li.setNum6(num6);
-        //System.out.println("이쪽인가요? id : "+id+" title : "+title+" d_day : "+d_day+" num1 : "+num1+" num2 : "+num2+" num3 : "+num3+" num4 : "+num4+" num5 : "+num5+" num6 : "+num6);
+        System.out.println("이쪽인가요? id : "+id+" title : "+title+" num1 : "+num1+" num2 : "+num2+" num3 : "+num3+" num4 : "+num4+" num5 : "+num5+" num6 : "+num6);
         
         DAO dao = new DAO();
         boolean a = dao.setLotteryInfo(li);

@@ -17,7 +17,9 @@ public class DAO {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             
-            String url = "jdbc:mysql://localhost:3306/tjs828912";
+            //String url = "jdbc:mysql://localhost:3306/tjs828912";
+            String url = "jdbc:mysql://tjs828912.cafe24.com:3306/tjs828912";
+            
             conn = DriverManager.getConnection(url, "tjs828912", "qwe123asd");
             
             /*
@@ -34,7 +36,7 @@ public class DAO {
     }
     
     public String[] getThisLottery(String nickname){	// 전체 목록 (), 대여량 기준 정렬(sort) , 대여된 책(rentaled) , 대여 가능한 책리스트(rental)
-        String[] list = new String[6];
+        String[] list = new String[7];
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -42,10 +44,13 @@ public class DAO {
         try {
             conn = getConnection();
             String sql = "";
-            sql += " select a.id , a.title , a.d_day , concat( a.title , if( a.use_yn='c',' - 마감 - ' ,' - 진행중 - ')  , '( 마감일 : ' , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' )  , ' )') txt  ";
-            sql += " , (select IFNULL(max(option_yn),'n') from  lottery_gift where a.id = info_id and nick_nm = '"+nickname+"' ) auto ";
-            sql += " , a.use_yn ";
-            sql += " from lottery_info a where a.id = ( select max( id ) from lottery_info )  ";
+            sql += " select a.id , a.title , if( use_yn = 'y' , date_format( now()   , '%Y.%m.%d %H:%i:%s' ) , date_format( d_day   , '%Y.%m.%d %H:%i:%s' ) )  d_day , concat( a.title , if( a.use_yn='c',' - 마감 - ' ,' - 진행중 - ')  , '( 마감일 : ' , if( use_yn = 'y' , date_format( now()   , '%Y.%m.%d %H:%i:%s' ) , date_format( d_day   , '%Y.%m.%d %H:%i:%s' ) ) , ' )') txt   ";
+            sql += " , (select IFNULL(max(option_yn),'n') from  lottery_gift where  nick_nm = '"+nickname+"' ) auto  ";
+            sql += " , a.use_yn as use_yn ";
+            sql += " , (select count(1) from  user_lottery where a.id = info_id and nick_nm = '"+nickname+"' ) user_cnt   ";
+            sql += " from lottery_info a where a.id = ( select max( id ) from lottery_info )   ";
+            
+            
             
             System.out.println("getThisLottery = sql : "+sql);
             
@@ -58,6 +63,7 @@ public class DAO {
             list[3] = rs.getString(4);
             list[4] = rs.getString(5);
             list[5] = rs.getString(6);
+            list[6] = rs.getString(7);
 
         }
         catch (SQLException e) {
@@ -100,25 +106,46 @@ public class DAO {
         Connection conn = null;
         PreparedStatement pstmt = null;
         PreparedStatement pstmt1 = null;
+        PreparedStatement pstmt2 = null;
         ResultSet rs = null;
-
+        String sql = "";
         try {
             conn = getConnection();
-            String sql = "INSERT INTO user_lottery( info_id, nick_nm, num1, num2, num3, num4, num5, num6, create_dt) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, now() )";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(	1, Integer.parseInt(id) );
-            pstmt.setString(2, nick					);
-            pstmt.setInt(	3, Integer.parseInt( num1 )	);
-            pstmt.setInt(	4, Integer.parseInt( num2 )	);
-            pstmt.setInt(	5, Integer.parseInt( num3 )	);
-            pstmt.setInt(	6, Integer.parseInt( num4 )	);
-            pstmt.setInt(	7, Integer.parseInt( num5 )	);
-            pstmt.setInt(	8, Integer.parseInt( num6 )	);
             
-            int count = pstmt.executeUpdate();
-            result = (count == 1);
+			sql += " select ";			
+			sql += " a.use_yn "; 
+			sql += " , count(1) cnt ";
+			sql += " from lottery_info a "; 
+			sql += " left outer join user_lottery b on ( a.id = b.info_id ) ";
+			sql += " where a.id = '"+id+"' ";
+			sql += " and b.nick_nm = '"+nick+"'  ";
+			
+			pstmt2 = conn.prepareStatement(sql);
+            rs = pstmt2.executeQuery();
+            rs.next();
+            String use_yn = rs.getString(1); 
+            String user_cnt = rs.getString(2);
+	    	
+            if( use_yn.equals("y") && user_cnt.equals("0") ) {
+                sql = "INSERT INTO user_lottery( info_id, nick_nm, num1, num2, num3, num4, num5, num6, create_dt) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, now() )";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(	1, Integer.parseInt(id) );
+                pstmt.setString(2, nick					);
+                pstmt.setInt(	3, Integer.parseInt( num1 )	);
+                pstmt.setInt(	4, Integer.parseInt( num2 )	);
+                pstmt.setInt(	5, Integer.parseInt( num3 )	);
+                pstmt.setInt(	6, Integer.parseInt( num4 )	);
+                pstmt.setInt(	7, Integer.parseInt( num5 )	);
+                pstmt.setInt(	8, Integer.parseInt( num6 )	);
+                
+                int count = pstmt.executeUpdate();
+                result = (count == 1);            	
+            }else {
+            	result = false;
+            }
             
-            
+
+                        
             conn = getConnection();
             sql = "";
 			sql += " SELECT a.id, a.info_id, a.nick_nm ";
@@ -221,7 +248,7 @@ public class DAO {
         try {        	
             conn = getConnection();
             String sql = "";
-            sql += " select a.id , ifnull( concat( a.title , if( a.use_yn='c',' - 마감 - ' ,' - 진행중 - ') , ' ( 마감일 : ' , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' ) ,  ' )') ,'정보 없음') txt  , a.use_yn    "; 
+            sql += " select a.id , ifnull( concat( a.title , if( a.use_yn='c',' - 마감 - ' ,' - 진행중 - ') , ' ( 마감일 : ' , if( use_yn = 'y' , date_format( now()   , '%Y.%m.%d %H:%i:%s' ) , date_format( d_day   , '%Y.%m.%d %H:%i:%s' ) ) ,  ' )') ,'정보 없음') txt  , a.use_yn    "; 
             sql += " from lottery_info a where a.use_yn in( 'c','y') order by 1 desc ";
              
 			pstmt1 = conn.prepareStatement(sql);
@@ -267,7 +294,7 @@ public class DAO {
     }
     
     //  이번 회차 당첨 번호 리스트
-    public LotteryInfo getThisLotteryinfo() {
+    public LotteryInfo getThisLotteryinfo(String str) {
     	LotteryInfo li = new LotteryInfo();
         Connection conn = null;
         PreparedStatement pstmt1 = null;
@@ -276,7 +303,7 @@ public class DAO {
             conn = getConnection();
             String sql = "";
 			sql += " select ";
-			sql += " a.id , a.title , date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' ) d_day "; 
+			sql += " a.id , a.title , if( use_yn = 'y' , date_format( now()   , '%Y.%m.%d %H:%i:%s' ) , date_format( d_day   , '%Y.%m.%d %H:%i:%s' ) ) d_day "; 
 			sql += " , case when a.use_yn = 'c' then a.num1 else '' end num1 ";
 			sql += " , case when a.use_yn = 'c' then a.num2 else '' end num2 ";
 			sql += " , case when a.use_yn = 'c' then a.num3 else '' end num3 ";
@@ -284,7 +311,7 @@ public class DAO {
 			sql += " , case when a.use_yn = 'c' then a.num5 else '' end num5 ";
 			sql += " , case when a.use_yn = 'c' then a.num6 else '' end num6 ";
 			sql += " from lottery_info a ";
-			sql += " where a.id = ( select max(id)  from lottery_info  ) ";    
+			sql += " where a.id = ( select max(id)  from lottery_info where id like '"+str+"'  ) ";    
 			System.out.println( sql );
        		
 			pstmt1 = conn.prepareStatement(sql);
@@ -306,7 +333,7 @@ public class DAO {
     	return li;
     }
     
-    public List<LotteryList> getThisLotteryList() {
+    public List<LotteryList> getThisLotteryList(String str) {
     	List<LotteryList> lll = new ArrayList<LotteryList>();
     	Connection conn = null;
         PreparedStatement pstmt1 = null;
@@ -331,7 +358,7 @@ public class DAO {
             sql += " , case when a.use_yn !='c' then '' else (case when b.num1 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num2 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num3 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num4 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num5 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end  + case when b.num6 in ( a.num1 , a.num2 , a.num3 , a.num4 , a.num5 , a.num6  ) then 1 else 0 end ) end as cnt   ";
             sql += " from user_lottery b   ";
             sql += " left outer join lottery_info a on ( a.id = b.info_id )   ";
-            sql += " where 1=1  and a.id = ( select max(id)  from lottery_info  )  ";
+            sql += " where 1=1  and a.id = ( select max(id)  from lottery_info where id like '"+str+"'  )  ";
 			//sql += " and a.use_yn ='c'              ";
 			System.out.println( sql );
 			pstmt1 = conn.prepareStatement(sql);
@@ -390,9 +417,9 @@ public class DAO {
 			sql += " join user_lottery b on ( a.id = b.info_id ) ";
 			sql += " where 1=1 ";
 			sql += " and a.id = '"+id+"' ";
-			sql += " and a.use_yn ='c' ";
+			//sql += " and a.use_yn ='c' ";
 			sql += " ) a ";
-			sql += " where a.cnt != 0 ";
+			//sql += " where a.cnt != 0 ";
 			sql += " group by a.cnt desc ";
 			System.out.println(sql);
        		
@@ -410,7 +437,7 @@ public class DAO {
     	return lls;	
     }  
     
-    public List<String[]> getLotteryInfo() {
+    public List<String[]> getLotteryInfoList() {
     	List<String[]> lls = new ArrayList<String[]>();
     	Connection conn = null;
         PreparedStatement pstmt1 = null;
@@ -418,7 +445,7 @@ public class DAO {
         try {        	
             conn = getConnection();
             String sql = "";
-			sql += " select a.id , concat( a.title , ' ( 마감일:', date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' ) ,' )' ) txt from lottery_info a where use_yn='c' order by 1 desc ";			
+			sql += " select a.id , concat( a.title , if( a.use_yn='c',' - 마감 - ' ,' - 진행중 - ')  , '( 마감일 : ' , if( use_yn = 'y' , date_format( now()   , '%Y.%m.%d %H:%i:%s' ) , date_format( d_day   , '%Y.%m.%d %H:%i:%s' ) ) , ' )')  txt from lottery_info a order by 1 desc ";			
        		
 			pstmt1 = conn.prepareStatement(sql);
             rs = pstmt1.executeQuery();
@@ -444,7 +471,7 @@ public class DAO {
             conn = getConnection();
             String sql = "";
 			sql += " select ";
-			sql += " a.id , a.title ,  date_format( a.d_day  , '%Y.%m.%d %H:%i:%s' ) d_day  , a.num1  , a.num2 , a.num3 , a.num4 , a.num5 , a.num6 , a.use_yn , case when a.use_yn = 'y' then '접수중' else '마감' end use_nm ";
+			sql += " a.id , a.title ,  if( use_yn = 'y' , date_format( now()   , '%Y.%m.%d %H:%i:%s' ) , date_format( d_day   , '%Y.%m.%d %H:%i:%s' ) ) d_day  , a.num1  , a.num2 , a.num3 , a.num4 , a.num5 , a.num6 , a.use_yn , case when a.use_yn = 'y' then '접수중' else '마감' end use_nm ";
 			sql += " from lottery_info a ";
 			sql += " order by 1 desc ";    
        		
@@ -505,50 +532,66 @@ public class DAO {
         boolean result = false;
         Connection conn = null;
         PreparedStatement pstmt = null;
+        PreparedStatement pstmt1 = null;
         try {
             conn = getConnection();
             String sql = ""; //"update book_store set rental_yn = 'Y' where rental_yn='N' and id = ?";
             if(li.getId() == null || li.getId().equals("")) {
-            	sql +=" INSERT INTO lottery_info( title, d_day, num1, num2, num3, num4, num5, num6, use_yn, create_dt)  ";
-            	sql +=" VALUES( ? , ? , ? , ? , ? , ? , ? , ? , ? , now()) ";
+            	sql +=" INSERT INTO lottery_info( title,  num1, num2, num3, num4, num5, num6,  create_dt , use_yn)  ";
+            	sql +=" VALUES( ? , ? , ? , ? , ? , ? , ? , now() , ?) ";
             	pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1 , li.getTitle()	);
-                pstmt.setString(2 , li.getD_day() 	);
-                pstmt.setString(3 , li.getNum1() 	);
-                pstmt.setString(4 , li.getNum2() 	);
-                pstmt.setString(5 , li.getNum3() 	);
-                pstmt.setString(6 , li.getNum4() 	);
-                pstmt.setString(7 , li.getNum5() 	);
-                pstmt.setString(8 , li.getNum6() 	);
-                pstmt.setString(9 , li.getUse_yn() 	);
+                pstmt.setString(2 , li.getNum1() 	);
+                pstmt.setString(3 , li.getNum2() 	);
+                pstmt.setString(4 , li.getNum3() 	);
+                pstmt.setString(5 , li.getNum4() 	);
+                pstmt.setString(6 , li.getNum5() 	);
+                pstmt.setString(7 , li.getNum6() 	);
+                pstmt.setString(8 , "y" 	);
                 int count = pstmt.executeUpdate();
                 result = (count == 1);            	
             }else {
-            	sql +=" UPDATE lottery_info SET  title=?, d_day=?, num1=?, num2=?, num3=?, num4=?, num5=?, num6=?, use_yn=?, create_dt=now()  ";
-            	sql +="  WHERE  id= ? ";
+            	sql = "";
+            	sql +=" UPDATE lottery_info SET  title=?, num1=?, num2=?, num3=?, num4=?, num5=?, num6=?, create_dt=now()  ";
+            	sql +="  WHERE  id= '"+li.getId()+"' ";
             	pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1 , li.getTitle()	);
-                pstmt.setString(2 , li.getD_day() 	);
-                pstmt.setString(3 , li.getNum1() 	);
-                pstmt.setString(4 , li.getNum2() 	);
-                pstmt.setString(5 , li.getNum3() 	);
-                pstmt.setString(6 , li.getNum4() 	);
-                pstmt.setString(7 , li.getNum5() 	);
-                pstmt.setString(8 , li.getNum6() 	);
-                pstmt.setString(9 , li.getUse_yn() 	);
-                pstmt.setString(10 , li.getId() 	);
+                pstmt.setString(1 , li.getTitle()	);                
+                pstmt.setString(2 , li.getNum1() 	);
+                pstmt.setString(3 , li.getNum2() 	);
+                pstmt.setString(4 , li.getNum3() 	);
+                pstmt.setString(5 , li.getNum4() 	);
+                pstmt.setString(6 , li.getNum5() 	);
+                pstmt.setString(7 , li.getNum6() 	);                
+                
                 int count = pstmt.executeUpdate();
-                result = (count == 1);   
+                result = (count == 1);      
+                
+                
+                sql = "";
+                sql += " update lottery_info set d_day = DATE_FORMAT( now() , '%Y%m%d%H%i%s' ) , use_yn = "; 
+                sql += " if(case when num1 is null or num1 = 0  then 0 else 1 end ";  
+				sql += " + case when num2 is null or num2 = 0   then 0 else 1 end  ";
+				sql += " + case when num3 is null or num3 = 0   then 0 else 1 end  ";
+				sql += " + case when num4 is null or num4 = 0   then 0 else 1 end  ";
+				sql += " + case when num5 is null or num5 = 0   then 0 else 1 end  ";
+				sql += " + case when num6 is null or num6 = 0   then 0 else 1 end = 6 , 'c' , 'y') ";
+				sql += " where id = '"+li.getId()+"' ";
+				pstmt = conn.prepareStatement(sql);				
+				count = pstmt.executeUpdate();
+                result = (count == 1);               
             }
         }
         catch (SQLException e) {
+        	System.out.println(" 하나 ");
             e.printStackTrace();
-        }
-        finally {
+        }finally {
             try {
                 if( conn != null ) {conn.close(); }
                 if( pstmt != null ) { pstmt.close(); }
-            }catch(SQLException e) {   e.printStackTrace(); }
+            }catch(SQLException e) {
+            	System.out.println(" 두울 ");
+            	e.printStackTrace(); 
+            }
         }
         return result;
     }    

@@ -1,3 +1,4 @@
+<%@page import="lottery.LotteryList"%>
 <%@page import="lottery.LotterySummery"%>
 <%@page import="lottery.DAO"%>
 <%@page import="lottery.LotteryInfo"%>
@@ -13,7 +14,7 @@
     String aa = (String)session.getAttribute("admin");
     
     List<String[]> com = new ArrayList<String[]>();
-    com = dao.getLotteryInfo();
+    com = dao.getLotteryInfoList();
     //getLotteryInfo
 %>
 
@@ -85,26 +86,24 @@
         	<br>
         	<p><b>회차정보 정보</b></p>    
         	    	
-			<form id='frmSubmit' action='./winning_list.jsp' method="post">
-	        	<select name="info">
+			<form id='frmSubmit' action='./winning_list.jsp' method="post" height = "150">
+	        	<select name="info"   style="width:500px;height:70px;"  >
 	        	<% 
 	            	if(com != null){            	
 	        		for(String[] vo : com){%>
 	        		<option value="<%= vo[0] %>"><%= vo[1] %></option>
 	    		<% }} %>
 	    		</select>   
-	    		<input type="submit"  value="조회"  widht='150'>	
-    		</form>	
+	    		<input type="submit"  value="조회"  style="width:150px;height:70px;">	
+    		</form>	        	
         	
-        	
-        	<br><br><br><br><br><br>
+        	<br><br>
         	<p><b>당첨자 정보</b></p>
         	<%
          	// 담첨 요약 
          	
          	String info = "";//request.getParameter("info");
-         	String _tmp = request.getParameter("info");
-         	
+         	String _tmp = request.getParameter("info");         	
         
          	if(_tmp == null || _tmp.equals("")){
          		info = com.get(0)[0];
@@ -112,11 +111,45 @@
          		info = _tmp;
          	}
         	
-        	List<LotterySummery> l_lotterysummery =  new ArrayList<LotterySummery>();
-         	
+        	List<LotterySummery> l_lotterysummery =  new ArrayList<LotterySummery>();         	
          	l_lotterysummery = dao.getThisLotterySummery(info);
+         	
+        	LotteryInfo lotteryinfo = new  LotteryInfo();
+        	lotteryinfo = dao.getThisLotteryinfo(info);
+        	
+        	// 당첨자 리스트 
+        	List<LotteryList> l_lotterylist =  new ArrayList<LotteryList>();
+        	l_lotterylist = dao.getThisLotteryList(info);
+         	
+         	
         	%>
-        	<table width="200" border="1">
+        	
+<table>
+	<tr>
+		<td>
+		<center>
+		<% if(lotteryinfo != null){
+			out.print("<b> 회차 정보 : "+ lotteryinfo.getTitle()+"</b>" );
+		} %>		
+		</center>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<center>
+		<% if(lotteryinfo != null){
+			out.print("마감일 : "+ lotteryinfo.getD_day() );
+		} %>	
+		</center>	
+		</td>
+	</tr>
+
+</table>
+	<br>
+		<br>
+			<br>
+
+       	<table width="200" border="1">
             	<thead>
             		<tr>
             			<td>당첨그룹</td>
@@ -131,6 +164,53 @@
           			</tr>
     		<% }} %>
     		</table>
+    		
+    		<br>
+    		<br>
+    		<br>
+    		<br>
+
+	
+	<table width="600" border="1" style="border:1px solid gray;   	border-collapse:collapse;">
+            	<thead>
+            		<tr>
+            			<td>순서</td>
+            			<td>별칭</td>
+            			<td>번호1</td>
+            			<td>번호2</td>
+            			<td>번호3</td>
+            			<td>번호4</td>
+            			<td>번호5</td>
+            			<td>번호6</td>
+            			<td>일치</td>
+            			
+            			
+            		</tr>
+            	</thead>
+            <% if(l_lotterylist != null){
+            	int cnt = 1;
+        		for(LotteryList vo : l_lotterylist){%>         			
+          			<tr>
+              			<td><%= cnt %></td>
+              			<td><%= vo.getNick_nm() %></td>
+              			<td <% if(vo.getNum1_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum1() %></td>
+              			<td <% if(vo.getNum2_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum2() %></td>
+              			<td <% if(vo.getNum3_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum3() %></td>
+              			<td <% if(vo.getNum4_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum4() %></td>
+              			<td <% if(vo.getNum5_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum5() %></td>
+              			<td <% if(vo.getNum6_chk().equals("true")){out.print("style = 'background-color: #bbdefb'");} %>><%= vo.getNum6() %></td>              			
+              			<td><%= vo.getCnt() %></td>                			
+          			</tr>
+    		<% cnt++; }} %>
+    		</table>
+	
+	
+	       	
+
+        	
+        
+ 
+    		
         </div>            
         	
     </div>

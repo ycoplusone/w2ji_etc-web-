@@ -11,11 +11,11 @@
 	DAO dao = new DAO();
 	// 이번 회차 당첨 번호 리스트 
 	LotteryInfo lotteryinfo = new  LotteryInfo();
-	lotteryinfo = dao.getThisLotteryinfo();
+	lotteryinfo = dao.getThisLotteryinfo("%");
 	
 	// 당첨자 리스트 
 	List<LotteryList> l_lotterylist =  new ArrayList<LotteryList>();
-	l_lotterylist = dao.getThisLotteryList();
+	l_lotterylist = dao.getThisLotteryList("%");
 	
 	
 	
