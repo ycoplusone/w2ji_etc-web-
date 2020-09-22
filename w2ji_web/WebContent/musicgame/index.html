@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Music Trivia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- link to google fonts API -->
+    <link href="https://fonts.googleapis.com/css?family=Neucha" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen" href="./assets/css/style.css" />
+    <link rel="icon" href="./assets/images/icon.png" />
+    <!-- jquery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+
+    <div id="startScreen">
+        <h1 id="masthead">
+            Welcome to the Music Trivia Challenge!!
+        </h1>
+        <div id="buttons">
+        	<button type="button" onclick="location.href='./adminlogin.jsp' ">
+        	Admin(관리자)
+        	</button>
+            <button id="hard" class="startButton" value="hard">
+                Challenge Mode
+            </button>
+            <button id="easy" class="startButton" value="easy">
+                Easy Mode
+            </button>
+        </div>
+    </div>
+    <div id="gameContent">
+        <h1 id="masthead">
+            Welcome to the Music Trivia Challenge!!
+        </h1>
+        <div id="time-left">
+        </div>
+        <div class="questions">
+            <div>
+                <br>
+                <button id="submit">
+                    Submit
+                </button>
+            </div>
+        </div>
+        <div id="results">
+        </div>
+    </div>
+    <script src="./assets/javascript/app.js"></script>
+    
+    
+</body>
+
+</html>
