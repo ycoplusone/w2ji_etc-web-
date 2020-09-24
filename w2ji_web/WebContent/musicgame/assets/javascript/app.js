@@ -87,7 +87,7 @@ var loadedJSON;
 function init(){
 	
 	var xhr= new XMLHttpRequest();
-	var target= "http://127.0.0.1:8080/w2ji_web/musicqlist";
+	var target= "../musicqlist";
 	xhr.open("GET", target);
 	xhr.send();
 	xhr.onreadystatechange= function(){

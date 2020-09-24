@@ -17,11 +17,10 @@ public class DAO {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/muzgame";
+            //String url = "jdbc:mysql://muzgame.cafe24.com:3306/muzgame";
             
-           
-            
-            String url = "jdbc:mysql://localhost:3306/com_mall";
-            conn = DriverManager.getConnection(url, "com", "com01");
+            conn = DriverManager.getConnection(url, "muzgame", "mozart18k");
             
             
         }
