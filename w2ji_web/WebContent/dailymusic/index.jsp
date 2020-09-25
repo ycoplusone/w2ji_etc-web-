@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -145,18 +146,28 @@ button:hover {
 
 document.getElementById('next').addEventListener('click', nextFunc);
 
-function nextFunc() {
-  msg.style.visibility = "hidden";
-  
+function nextFunc() {	//시작 버튼
+  msg.style.visibility = "hidden";  
   document.getElementById('l-1').style.visibility = "hidden";
   document.getElementById('l-2').style.visibility = "hidden";
   document.getElementById('l-3').style.visibility = "hidden";
   document.getElementById('l1').style.visibility = "hidden";
   document.getElementById('l2').style.visibility = "hidden";
-  document.getElementById('l3').style.visibility = "hidden";
-
+  document.getElementById('l3').style.visibility = "hidden";  
   init();
 }
+
+function continueFunc() {	//계속
+	  //msg.style.visibility = "hidden";  
+	  document.getElementById('l-1').style.visibility = "hidden";
+	  document.getElementById('l-2').style.visibility = "hidden";
+	  document.getElementById('l-3').style.visibility = "hidden";
+	  document.getElementById('l1').style.visibility = "hidden";
+	  document.getElementById('l2').style.visibility = "hidden";
+	  document.getElementById('l3').style.visibility = "hidden";  
+	  init();
+	}
+
 
 function noteSwitch() {
   if(n == 20 || n == 55 || n == 90) {
@@ -178,7 +189,6 @@ function noteSwitch() {
 
 function init() {
   let x = Math.floor((Math.random() * notes.length) + 1);
-
   if (note == Number(notes[x])){
     document.getElementById('l-1').style.visibility = "hidden";
     document.getElementById('l-2').style.visibility = "hidden";
@@ -192,6 +202,7 @@ function init() {
 
   note = document.getElementById('note').attributes.y.value = notes[x];  
   n = Number(note);
+  console.log('n : '+n);
 
   document.getElementById('next').disabled = true;
 
@@ -286,16 +297,19 @@ function doCheck(){
     msg.classList.remove('incorrect');
     msg.classList.add('correct');
     point++;
+    continueFunc();
   } else {
     noteSwitch();
-    msg.innerHTML = '도 은 정답이 아닙니다.. <br /> '  ;
+    msg.innerHTML = '"도" 정답이 아닙니다.. <br /> '  ;
     msg.style.visibility = "visible";
     msg.classList.remove('correct'); 
     msg.classList.add('incorrect');
   }
   count++;
+  over_check();
+  /*
   document.getElementById('counter').innerHTML = count;
-  document.getElementById('points').innerHTML = point;
+  document.getElementById('points').innerHTML = point;  
   doNote.disabled = true;
   reNote.disabled = true;
   miNote.disabled = true;
@@ -303,8 +317,8 @@ function doCheck(){
   solNote.disabled = true;
   laNote.disabled = true;
   siNote.disabled = true;
-
   document.getElementById('next').disabled = false;
+  */
 }
 
 function reCheck(){
@@ -314,14 +328,17 @@ function reCheck(){
     msg.classList.remove('incorrect');
     msg.classList.add('correct');
     point++;
+    continueFunc();
   } else {
     noteSwitch();
-    msg.innerHTML = '레 은 정답이 아닙니다.. <br /> '  ;
+    msg.innerHTML = '"레"  정답이 아닙니다.. <br /> '  ;
     msg.style.visibility = "visible";
     msg.classList.remove('correct'); 
     msg.classList.add('incorrect');
   }
   count++;
+  over_check();
+  /*
   document.getElementById('counter').innerHTML = count;
   document.getElementById('points').innerHTML = point;
   doNote.disabled = true;
@@ -331,8 +348,8 @@ function reCheck(){
   solNote.disabled = true;
   laNote.disabled = true;
   siNote.disabled = true;
-
   document.getElementById('next').disabled = false;
+  */
 }
 
 function miCheck(){
@@ -342,14 +359,17 @@ function miCheck(){
     msg.classList.remove('incorrect');
     msg.classList.add('correct');
     point++;
+    continueFunc();
   } else {
     noteSwitch();
-    msg.innerHTML = '미 은 정답이 아닙니다.. <br /> '  ;
+    msg.innerHTML = '"미" 정답이 아닙니다.. <br /> '  ;
     msg.style.visibility = "visible";
     msg.classList.remove('correct'); 
     msg.classList.add('incorrect');
   }
   count++;
+  over_check();
+  /*
   document.getElementById('counter').innerHTML = count;
   document.getElementById('points').innerHTML = point;
   doNote.disabled = true;
@@ -359,8 +379,8 @@ function miCheck(){
   solNote.disabled = true;
   laNote.disabled = true;
   siNote.disabled = true;
-
   document.getElementById('next').disabled = false;
+  */
 }
 
 function faCheck(){
@@ -370,14 +390,16 @@ function faCheck(){
     msg.classList.remove('incorrect');
     msg.classList.add('correct');
     point++;
+    continueFunc();
   } else {
     noteSwitch();
-    msg.innerHTML = '파 은 정답이 아닙니다.. <br /> '  ; 
+    msg.innerHTML = '"파" 정답이 아닙니다.. <br /> '  ; 
     msg.style.visibility = "visible";
     msg.classList.remove('correct'); 
     msg.classList.add('incorrect');
   }
   count++;
+  /*
   document.getElementById('counter').innerHTML = count;
   document.getElementById('points').innerHTML = point;
   doNote.disabled = true;
@@ -387,8 +409,9 @@ function faCheck(){
   solNote.disabled = true;
   laNote.disabled = true;
   siNote.disabled = true;
-
   document.getElementById('next').disabled = false;
+  */
+  over_check();
 }
 
 function solCheck(){
@@ -398,14 +421,16 @@ function solCheck(){
     msg.classList.remove('incorrect');
     msg.classList.add('correct');
     point++;
+    continueFunc();
   } else {
     noteSwitch();
-    msg.innerHTML = '솔 은 정답이 아닙니다.. <br /> '  ;
+    msg.innerHTML = '"솔" 정답이 아닙니다.. <br /> '  ;
     msg.style.visibility = "visible";
     msg.classList.remove('correct'); 
     msg.classList.add('incorrect');
   }
   count++;
+  /*
   document.getElementById('counter').innerHTML = count;
   document.getElementById('points').innerHTML = point;
   doNote.disabled = true;
@@ -415,8 +440,9 @@ function solCheck(){
   solNote.disabled = true;
   laNote.disabled = true;
   siNote.disabled = true;
-
   document.getElementById('next').disabled = false;
+  */
+  over_check();
 }
 
 function laCheck(){
@@ -426,14 +452,16 @@ function laCheck(){
     msg.classList.remove('incorrect');
     msg.classList.add('correct');
     point++;
+    continueFunc();
   } else {
     noteSwitch();
-    msg.innerHTML = '라 은 정답이 아닙니다.. <br /> '  ;
+    msg.innerHTML = '"라" 정답이 아닙니다.. <br /> '  ;
     msg.style.visibility = "visible";
     msg.classList.remove('correct'); 
     msg.classList.add('incorrect');
   }
   count++;
+  /*
   document.getElementById('counter').innerHTML = count;
   document.getElementById('points').innerHTML = point;
   doNote.disabled = true;
@@ -443,8 +471,9 @@ function laCheck(){
   solNote.disabled = true;
   laNote.disabled = true;
   siNote.disabled = true;
-
   document.getElementById('next').disabled = false;
+  */
+  over_check();
 }
 
 function siCheck(){
@@ -454,14 +483,17 @@ function siCheck(){
     msg.classList.remove('incorrect');
     msg.classList.add('correct');
     point++;
+    continueFunc();
   } else {
     noteSwitch();
-    msg.innerHTML = '시 은 정답이 아닙니다.. <br /> '  ;
+    msg.innerHTML = '"시" 정답이 아닙니다.. <br /> '  ;
     msg.style.visibility = "visible";
     msg.classList.remove('correct'); 
     msg.classList.add('incorrect');
   }
   count++;
+  over_check();
+  /*
   document.getElementById('counter').innerHTML = count;
   document.getElementById('points').innerHTML = point;
   doNote.disabled = true;
@@ -471,9 +503,30 @@ function siCheck(){
   solNote.disabled = true;
   laNote.disabled = true;
   siNote.disabled = true;
-
   document.getElementById('next').disabled = false;
+  */
+  
 }
+
+function over_check(){	
+	if( (count - point ) >= 2 ){
+		point = 0;
+		count = 0;		
+		alert('2회 틀리셧습니다. \n 다시 시작하세요.');
+		document.getElementById('next').disabled = false;
+	}else if( point >= 10 ){
+		alert('멜로디 게임으로 이동합니다.');
+		//location.href="src/index.html";
+		movepage();
+	}
+	document.getElementById('counter').innerHTML = count;
+	document.getElementById('points').innerHTML = point;
+}
+
+function movepage(){	
+	location.href="move.jsp";
+}
+
 </script>
 </body>
 </html>

@@ -1,0 +1,122 @@
+body{
+    background-image: url(../images/background.jpg);
+    margin: 0 auto;
+    margin-right: 20px;
+    margin-left: 20px;
+    font-family: 'Neucha', cursive;
+    vertical-align: middle;
+
+}
+
+#gameContent{
+    background-color:rgb(247,244,222);
+    height: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+h1{
+    text-align: center;
+    color: rgb(58,51,57);
+    font-weight: bolder;    
+    font-family: sans-serif;
+    background-color: rgb(247,244,222);
+    max-width: 960px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    font-family: 'Neucha', cursive;
+}
+
+.in{
+    background-color: rgb(79,152,185);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+    margin: 0 auto;
+    display: flex; 
+    justify-content: center;   
+    font-family: 'Neucha', cursive; 
+    font-size: 20px;
+}
+
+button{
+    background-color: rgb(79,152,185);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+    margin: 0 auto;
+    display: flex; 
+    justify-content: center;   
+    font-family: 'Neucha', cursive; 
+    font-size: 20px;
+}
+
+button:hover{
+    background-color: rgb(243,176,33);
+    border: none;
+    color: rgb(58,51,57);
+    font-weight: bolder;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+    margin: 0 auto;
+    display: flex; 
+    justify-content: center; 
+    font-size: 20px;
+}
+
+#startScreen{
+    background-color: rgb(247,244,222);
+    height: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 20px;
+}
+h2{
+    text-align: center; 
+}
+.questions{
+    text-align: center; 
+    font-size: 18px;
+}
+#results{
+    text-align: center; 
+    font-size: 20px;
+}
+
+#time-left h2{
+    background-color: rgb(149,89,117);
+    color: white;
+    width: 300px;
+    margin: 0 auto;
+}
+
+#hard{
+    display:inline-block;
+}
+
+#easy{
+    display:inline-block;
+    width: 179.14px;
+}
+
+#buttons{
+    display: flex;
+}
