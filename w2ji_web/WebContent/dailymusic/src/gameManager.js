@@ -763,7 +763,8 @@ function getnextMelody() {
 	//generate a new melody
 	generateMelody();
 	
-	if( sessionStorage.getItem("level") >= 6  ){
+	if( sessionStorage.getItem("level") >= 2  ){ //6
+		setCookie1();
 		location.href="../gold.jsp";
 	}
 	
@@ -776,6 +777,36 @@ function getnextMelody() {
 	//display next level
 	document.getElementById("level").innerHTML = parseInt(sessionStorage.getItem("level"));
 }
+
+function setCookie1(){
+    // 변수를 선언
+    // 변수를 선언한다.
+    var date = new Date();
+	date.setDate(date.getDate() +365);
+	var aaa = getCookie1('goldcnt');
+	alert(aaa);
+	if(aaa == null || aaa == 0 ){
+		aaa = 1;
+	}else{
+		aaa = (1*aaa)+1;
+	}
+	
+	
+    var val = "";
+    val += "goldcnt="+aaa+";";
+    val += "path=/;";
+    val += "Expires=" + date.toUTCString();    
+    // 쿠키를 집어넣는다.
+    document.cookie = val;
+}
+
+function getCookie1(name) {
+	var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+	return value? value[2] : null;
+}
+
+
+
 
 //check to see if melody is correct so far
 //note is a string (ex. C4)
@@ -892,6 +923,7 @@ function initStart() {
 	//display first level
 	document.getElementById("level").innerHTML = parseInt(sessionStorage.getItem("level"));
 }
+
 
 //run only once when web page is loaded
 function initOnce() {

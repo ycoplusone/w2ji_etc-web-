@@ -69,6 +69,13 @@ button:hover {
   <div class="score">
     <h3>점수: <span id="points"></span> / <span id="counter"></span></h3>
     <button id="next">시작</button>
+    <!-- button onclick="setCookie()">쿠키 생성</button>
+    <button onclick="getCookie('game1')">가져오기</button>
+    <button onclick="movepage()">이동</button-->
+    
+    
+    
+    
   </div>
   <p id="msg"><br /><br /></p>
   <svg id="score" height="125" width="500" style="display:block;margin:50px auto;">
@@ -88,13 +95,13 @@ button:hover {
   </svg>
 
   <div class="buttons">
-    <button id="doNote">도</button>
-    <button id="reNote">레</button>
-    <button id="miNote">미</button>
-    <button id="faNote">파</button>
-    <button id="solNote">솔</button>
-    <button id="laNote">라</button>
-    <button id="siNote">시</button>
+    <button id="doNote" disabled>도</button>
+    <button id="reNote" disabled>레</button>
+    <button id="miNote" disabled>미</button>
+    <button id="faNote" disabled>파</button>
+    <button id="solNote" disabled>솔</button>
+    <button id="laNote" disabled>라</button>
+    <button id="siNote" disabled>시</button>
   </div>
   
   <br />
@@ -146,15 +153,23 @@ button:hover {
 
 document.getElementById('next').addEventListener('click', nextFunc);
 
-function nextFunc() {	//시작 버튼
-  msg.style.visibility = "hidden";  
-  document.getElementById('l-1').style.visibility = "hidden";
-  document.getElementById('l-2').style.visibility = "hidden";
-  document.getElementById('l-3').style.visibility = "hidden";
-  document.getElementById('l1').style.visibility = "hidden";
-  document.getElementById('l2').style.visibility = "hidden";
-  document.getElementById('l3').style.visibility = "hidden";  
-  init();
+function nextFunc() {	//시작 버튼	
+	if( getCookie('game1') == getYymmdd() ){
+		alert('하루 한번 가능합니다.');
+		return;
+	}else{
+		setCookie();
+	}
+	
+	msg.style.visibility = "hidden";  
+	document.getElementById('l-1').style.visibility = "hidden";
+	document.getElementById('l-2').style.visibility = "hidden";
+	document.getElementById('l-3').style.visibility = "hidden";
+	document.getElementById('l1').style.visibility = "hidden";
+	document.getElementById('l2').style.visibility = "hidden";
+	document.getElementById('l3').style.visibility = "hidden";  
+	buttoninit('true');
+	init();
 }
 
 function continueFunc() {	//계속
@@ -164,9 +179,64 @@ function continueFunc() {	//계속
 	  document.getElementById('l-3').style.visibility = "hidden";
 	  document.getElementById('l1').style.visibility = "hidden";
 	  document.getElementById('l2').style.visibility = "hidden";
-	  document.getElementById('l3').style.visibility = "hidden";  
+	  document.getElementById('l3').style.visibility = "hidden";
 	  init();
+}
+
+
+function setCookie(){
+	alert(document.cookie);
+    // 변수를 선언
+    // 변수를 선언한다.
+    var date = new Date();
+	date.setDate(date.getDate() +365);
+	var yymmdd =  getYymmdd();
+    var val = "";
+    val += "game1="+yymmdd+";";
+    val += "path=/;";
+    val += "Expires=" + date.toUTCString();
+    
+    // 쿠키를 집어넣는다.
+    document.cookie = val;
+}
+
+function getCookie(name) {
+	var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+	return value? value[2] : null;
+}
+
+function getYymmdd(){
+    var date = new Date();    
+	var year = date.getFullYear();              //yyyy
+	var month = (1 + date.getMonth());          //M
+	month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+	var day = date.getDate();                   //d
+	day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+	return year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+}
+
+function buttoninit( flag ){ //버튼 활성화 체크
+	if( flag == 'true' ){
+		document.getElementById('next').disabled = true;
+		doNote.disabled = false;
+		reNote.disabled = false;
+		miNote.disabled = false;
+		faNote.disabled = false;
+		solNote.disabled = false;
+		laNote.disabled = false;
+		siNote.disabled = false;		
+	}else{
+		document.getElementById('next').disabled = false;
+		doNote.disabled = true;
+		reNote.disabled = true;
+		miNote.disabled = true;
+		faNote.disabled = true;
+		solNote.disabled = true;
+		laNote.disabled = true;
+		siNote.disabled = true;		
 	}
+	
+}
 
 
 function noteSwitch() {
@@ -204,15 +274,8 @@ function init() {
   n = Number(note);
   console.log('n : '+n);
 
-  document.getElementById('next').disabled = true;
-
-  doNote.disabled = false;
-  reNote.disabled = false;
-  miNote.disabled = false;
-  faNote.disabled = false;
-  solNote.disabled = false;
-  laNote.disabled = false;
-  siNote.disabled = false;
+  
+ 
 
   if(n >= 90){
       document.getElementById('l-1').style.visibility = "visible";
@@ -306,19 +369,7 @@ function doCheck(){
     msg.classList.add('incorrect');
   }
   count++;
-  over_check();
-  /*
-  document.getElementById('counter').innerHTML = count;
-  document.getElementById('points').innerHTML = point;  
-  doNote.disabled = true;
-  reNote.disabled = true;
-  miNote.disabled = true;
-  faNote.disabled = true;
-  solNote.disabled = true;
-  laNote.disabled = true;
-  siNote.disabled = true;
-  document.getElementById('next').disabled = false;
-  */
+  over_check();  
 }
 
 function reCheck(){
@@ -338,18 +389,6 @@ function reCheck(){
   }
   count++;
   over_check();
-  /*
-  document.getElementById('counter').innerHTML = count;
-  document.getElementById('points').innerHTML = point;
-  doNote.disabled = true;
-  reNote.disabled = true;
-  miNote.disabled = true;
-  faNote.disabled = true;
-  solNote.disabled = true;
-  laNote.disabled = true;
-  siNote.disabled = true;
-  document.getElementById('next').disabled = false;
-  */
 }
 
 function miCheck(){
@@ -369,18 +408,7 @@ function miCheck(){
   }
   count++;
   over_check();
-  /*
-  document.getElementById('counter').innerHTML = count;
-  document.getElementById('points').innerHTML = point;
-  doNote.disabled = true;
-  reNote.disabled = true;
-  miNote.disabled = true;
-  faNote.disabled = true;
-  solNote.disabled = true;
-  laNote.disabled = true;
-  siNote.disabled = true;
-  document.getElementById('next').disabled = false;
-  */
+
 }
 
 function faCheck(){
@@ -399,18 +427,7 @@ function faCheck(){
     msg.classList.add('incorrect');
   }
   count++;
-  /*
-  document.getElementById('counter').innerHTML = count;
-  document.getElementById('points').innerHTML = point;
-  doNote.disabled = true;
-  reNote.disabled = true;
-  miNote.disabled = true;
-  faNote.disabled = true;
-  solNote.disabled = true;
-  laNote.disabled = true;
-  siNote.disabled = true;
-  document.getElementById('next').disabled = false;
-  */
+ 
   over_check();
 }
 
@@ -430,18 +447,7 @@ function solCheck(){
     msg.classList.add('incorrect');
   }
   count++;
-  /*
-  document.getElementById('counter').innerHTML = count;
-  document.getElementById('points').innerHTML = point;
-  doNote.disabled = true;
-  reNote.disabled = true;
-  miNote.disabled = true;
-  faNote.disabled = true;
-  solNote.disabled = true;
-  laNote.disabled = true;
-  siNote.disabled = true;
-  document.getElementById('next').disabled = false;
-  */
+  
   over_check();
 }
 
@@ -460,19 +466,7 @@ function laCheck(){
     msg.classList.remove('correct'); 
     msg.classList.add('incorrect');
   }
-  count++;
-  /*
-  document.getElementById('counter').innerHTML = count;
-  document.getElementById('points').innerHTML = point;
-  doNote.disabled = true;
-  reNote.disabled = true;
-  miNote.disabled = true;
-  faNote.disabled = true;
-  solNote.disabled = true;
-  laNote.disabled = true;
-  siNote.disabled = true;
-  document.getElementById('next').disabled = false;
-  */
+  count++;  
   over_check();
 }
 
@@ -493,19 +487,7 @@ function siCheck(){
   }
   count++;
   over_check();
-  /*
-  document.getElementById('counter').innerHTML = count;
-  document.getElementById('points').innerHTML = point;
-  doNote.disabled = true;
-  reNote.disabled = true;
-  miNote.disabled = true;
-  faNote.disabled = true;
-  solNote.disabled = true;
-  laNote.disabled = true;
-  siNote.disabled = true;
-  document.getElementById('next').disabled = false;
-  */
-  
+   
 }
 
 function over_check(){	
@@ -513,7 +495,8 @@ function over_check(){
 		point = 0;
 		count = 0;		
 		alert('2회 틀리셧습니다. \n 다시 시작하세요.');
-		document.getElementById('next').disabled = false;
+		  buttoninit('false');
+		//document.getElementById('next').disabled = false;
 	}else if( point >= 10 ){
 		alert('멜로디 게임으로 이동합니다.');
 		//location.href="src/index.html";
@@ -530,3 +513,4 @@ function movepage(){
 </script>
 </body>
 </html>
+
