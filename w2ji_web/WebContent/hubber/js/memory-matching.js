@@ -98,13 +98,16 @@ function removeTookCards() {
 	$(".card-removed").remove();
 	if ($(".card").length == 0) {
 		tot_cnt = tot_cnt + 1;
-		again();
+		
+		$("#continue").removeClass("hide");
+		//again();
 	}
 }
 
 function gameover() {
 	clearInterval(matchingGame.timer);
-	$(".score").html($("#elapsed-time").html());
+	//$(".score").html("step : "+tot_cnt+" - "+$("#elapsed-time").html());
+	$(".score").html(tot_cnt+" Level ");
 
 	var lastScore = localStorage.getItem("last-score");
 	lastScoreObj = JSON.parse(lastScore);
@@ -116,7 +119,7 @@ function gameover() {
 	var second = lastElapsedTime % 60;
 	if (minute < 10) minute = "0" + minute;
 	if (second < 10) second = "0" + second;
-	$(".last-score").html("( <b>step : "+tot_cnt+"</b>    "+minute+":"+second +")");
+	//$(".last-score").html("( step : "+tot_cnt+" - "+minute+":"+second +" )");
 	var savedTime = lastScoreObj.savedTime;
 	$(".saved-time").html(savedTime);
 
@@ -149,7 +152,7 @@ function countTimer() {
 
 	if (minute < 10) minute = "0" + minute;
 	if (second < 10) second = "0" + second;
-	if( minute >= 1 && second >=1 ){
+	if( minute >= 1 && second >=31 ){
 			gameover();
 	}else{
 			$("#elapsed-time").html(minute+":"+second);
@@ -166,7 +169,7 @@ function again(){
     var $loader = $("#loader");	
 	console.log( $cards )
 	$cards.hide();
-
+	
 
 	matchingGame = {
 		elapsedTime: 0
@@ -258,7 +261,7 @@ function init(){
 
 
 }
-
+/*
 $(function(){
 	init();    
-});
+});*/
