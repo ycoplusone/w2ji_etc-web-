@@ -3,6 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <title>Covid Case Search design</title>
+
+    <style>
+    table,th,td{
+    	border:1px solid gray;
+    	border-collapse:collapse;
+    }
+    </style>
+
+<script src="jquery.min.js"></script>
+<script>
+	var var_month='';
+	var var_type='';
+	
+	var var_month_txt='';
+	var var_type_txt='';
+	
+	var var_html='';
+	function search(){
+		console.log('search');
+		var_month = $("#getmonth option:selected").val();
+		var_type = $("#gettype option:selected").val();
+		
+		var_month_txt = $("#getmonth option:selected").text();
+		var_type_txt = $("#gettype option:selected").text();
+		
+		getxml();
+	}
+	
+	
+	function getxml(){
+		console.log('getxml');
+		$.ajax( {
+			url : 'cases.xml',
+			type : 'post',			
+			dataType : 'xml',
+			beforeSend : function() {},			
+			error : function( data ) {},
+			complete : function() {} ,
+			success : function( data ) {
+				var_html = "<table><thead><tr><td>Monthly</td><td>"+var_type_txt+"</td></tr></thead> ";
+				$(data).find('data').each(function(){
+					var tmp1 = $(this).find('date').text();
+					var tmp2 = $(this).find('newCasesByPublishDate').text();
+					var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";					
+					console.log(tmp1,tmp2);
+				});
+				var_html += " </table> ";
+				console.log(var_html);
+				
+			}
+		});		
+		$("#table01").html('sdfsdf');
+	}
+	
+</script>
 </head>
 <body>
 <!-- 
@@ -19,7 +74,7 @@ Search for Covid Cases in UK by Month:
 <br>
 <div>
 	Choose Month :
-	<select name="getmonth">
+	<select name="getmonth" id="getmonth">
 	    <option value="all">all</option>
 	    <option value="1">Jan</option>
 	    <option value="2">Feb</option>
@@ -35,13 +90,19 @@ Search for Covid Cases in UK by Month:
 	    <option value="12">Dec</option>	    
 	</select>
 	Choose Date :
-	<select name="gettype">
+	<select name="gettype" id="gettype">
 	    <option value="mon">Monthly Data</option>
 	    <option value="day">Daily Average</option>
 	</select> 	
-	<button type="button">Search</button>	
+	<button type="button"  onclick="search();">Search</button>	
 </div>
 <br><br>
-table
+<div id="table01">
+	<!-- table style="border:1px solid gray; border-collapse:collapse;">
+		<thead>
+			<tr><td id="head1">Monthly</td><td id="head2">value</td></tr>
+		</thead>
+	</table-->
+</div>
 </body>
 </html>
