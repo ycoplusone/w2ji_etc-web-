@@ -31,12 +31,6 @@ function search(){
 	var_getcategory = $("#getcategory option:selected").val();
 	var_getmonth = $("#getmonth").val();
 	console.log(var_gettype,' - ',var_getcategory);		
-    /*
-	<option value="c">Cases</option>
-    <option value="t">Tests</option>
-    <option value="tc">Test Capacity</option>
-    <option value="pih">Patients In Hospital</option>
-    */    
     
     if(var_gettype =='d'){
     	if(var_getcategory == 'c'){
@@ -129,39 +123,6 @@ function search(){
     	}  
     	
     } 
-    
-    
-	
-	
-	/*
-	var_html = "<table><thead><tr><td width=150>date</td><td width=250>newCasesByPublishDate</td></tr></thead> ";
-	var cnt = 0;
-	var total = 0;
-	
-	array.forEach(function(data){			
-		if( var_getcompare == 'e' ){
-			var tmp1 = data[0];
-			var tmp2 = data[1];
-			if( tmp1 == var_getdate ){
-				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";
-			}
-		}else if( var_getcompare == 'lt' ){
-			var tmp1 = data[0];
-			var tmp2 = data[1];
-			if( tmp1 <= var_getdate ){
-				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
-			}						
-		}else if( var_getcompare == 'gt' ){
-			var tmp1 = data[0];
-			var tmp2 = data[1];
-			if( tmp1 >= var_getdate ){
-				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
-			}						
-		}
-	});
-	var_html += " </table> ";
-	$("#table01").html(var_html);*/
-	
 }
 
 function setHtml(arr , type){

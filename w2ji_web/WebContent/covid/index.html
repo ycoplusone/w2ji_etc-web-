@@ -3,15 +3,419 @@
 <head>
 <meta charset="UTF-8">
 <title>Covid Case Search design</title>
-</head>
-<body>
 
-<a href="zmonth.html">Search for Covid Cases in UK by Month</a>
+    <style>
+    table,th,td{
+    	border:1px solid gray;
+    	border-collapse:collapse;
+    	border-padding:10px;
+    	text-align : center;
+    }
+    </style>
+
+<script src="jquery.min.js"></script>
+<script>
+
+var var_month='';
+var var_type='';
+
+var var_month_txt='';
+var var_type_txt='';
+
+
+var var_gettype='';
+var var_getcategory='';
+var var_getmonth='';
+
+var var_getdate='';
+var var_getcompare='';
+
+var cases_array = new Array();
+var hospital_array = new Array();
+var testing_array = new Array();
+
+var var_html='';
+
+function search_month(){
+	console.log('search');
+	var_month = $("#getmonth option:selected").val();
+	var_type = $("#gettype option:selected").val();
+	
+	var_month_txt = $("#getmonth option:selected").text();
+	var_type_txt = $("#gettype option:selected").text();
+	
+	var_html = "<table><thead><tr><td width=150>"+var_month_txt+"</td><td width=250>"+var_type_txt+"</td></tr></thead> ";
+	var cnt = 0;
+	var total = 0;
+	
+	cases_array.forEach(function(data){			
+		if( var_month == 'all' && var_type == 'mon' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";	
+		}else if( var_month != 'all' && var_type == 'mon' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1.substring(5,7) == var_month ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
+			}						
+		}else if( var_month == 'all' && var_type != 'mon' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			total += Number( tmp2 );
+			cnt ++;
+			var tmp3 = tmp2 +"( "+ Math.round(total / cnt)+" )";
+			var_html += " <tr><td>"+tmp1+"</td><td>"+tmp3+"</td></tr> ";						
+		}else if( var_month != 'all' && var_type != 'mon' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1.substring(5,7) == var_month ){
+				total += Number( tmp2 );
+				cnt ++;
+				var tmp3 = tmp2 +"( "+ Math.round(total / cnt)+" )";
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp3+"</td></tr> ";	
+			}								
+		}
+	});
+	var_html += " </table> ";
+	$("#table01").html(var_html);
+	
+}	
+
+function search_day(){
+	console.log('search');
+	var_getdate = $("#getdate").val();
+	var_getcompare = $("#getcompare").val();
+	//console.log(var_getdate,' - ',var_getcompare);
+		
+	
+	var_html = "<table><thead><tr><td width=150>date</td><td width=250>newCasesByPublishDate</td></tr></thead> ";
+	var cnt = 0;
+	var total = 0;
+	
+	cases_array.forEach(function(data){			
+		if( var_getcompare == 'e' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1 == var_getdate ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";
+			}
+		}else if( var_getcompare == 'lt' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1 <= var_getdate ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
+			}						
+		}else if( var_getcompare == 'gt' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1 >= var_getdate ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
+			}						
+		}
+	});
+	var_html += " </table> ";
+	$("#table01").html(var_html);
+	
+}
+	
+	function getxml(){
+
+		$.ajax( {
+			url : 'cases.xml',
+			type : 'post',			
+			dataType : 'xml',
+			beforeSend : function() {},			
+			error : function( data ) {},
+			complete : function() {} ,
+			success : function( data ) {
+				var cnt = 0;
+				$(data).find('data').each(function(){
+					 var element = [];
+					 element[0] = $(this).find('date').text();
+					 element[1] = $(this).find('newCasesByPublishDate').text();
+					 cases_array.push(element);				 
+				});
+				cases_array.reverse();
+			}
+		});
+		
+		$.ajax( {
+			url : 'hospital.xml',
+			type : 'post',			
+			dataType : 'xml',
+			beforeSend : function() {},			
+			error : function( data ) {},
+			complete : function() {} ,
+			success : function( data ) {
+				var cnt = 0;
+				$(data).find('data').each(function(){
+					 var element = [];
+					 element[0] = $(this).find('date').text();
+					 element[1] = $(this).find('hospitalCases').text();
+					 hospital_array.push(element);				 
+				});
+				hospital_array.reverse();
+			}
+		});
+		
+		$.ajax( {
+			url : 'testing.xml',
+			type : 'post',			
+			dataType : 'xml',
+			beforeSend : function() {},			
+			error : function( data ) {},
+			complete : function() {} ,
+			success : function( data ) {
+				var cnt = 0;
+				$(data).find('data').each(function(){
+					 var element = [];
+					 element[0] = $(this).find('date').text();
+					 element[1] = $(this).find('plannedPCRCapacityByPublishDate').text();
+					 element[2] = $(this).find('plannedAntibodyCapacityByPublishDate').text();
+					 element[3] = $(this).find('newPCRTestsByPublishDate').text();
+					 element[4] = $(this).find('cumPCRTestsByPublishDate').text();
+					 element[5] = $(this).find('newAntibodyTestsByPublishDate').text();
+					 element[6] = $(this).find('cumAntibodyTestsByPublishDate').text();
+					 testing_array.push(element);				 
+				});
+				testing_array.reverse();
+			}
+		});	
+		
+		
+	}
+
+	
+	function chageSelect(){
+		var tt = $("#getty option:selected").val();
+		if(tt=='m'){
+			$("#getmon").show()
+		}else{
+			$("#getmon").hide()
+		}
+	}	
+		
+	function search_top(){
+		console.log('search');
+		var_gettype = $("#getty option:selected").val();
+		var_getcategory = $("#getcategory option:selected").val();
+		var_getmonth = $("#getmon").val();
+		console.log(var_gettype,' - ',var_getcategory);		
+	    
+	    if(var_gettype =='d'){
+	    	if(var_getcategory == 'c'){
+	    		cases_array.sort(function(a, b) {
+	    			  return a[1] - b[1];
+				});			
+	    		cases_array.reverse();
+	    		setHtml(cases_array , 'c');    		
+	    	}else if(var_getcategory == 't'){
+	    		testing_array.sort(function(a, b) {
+	  			  return a[3] - b[3];
+				});			
+	    		testing_array.reverse();
+	    		setHtml(testing_array , 't');  			
+	    	}else if(var_getcategory == 'tc'){
+	    		testing_array.sort(function(a, b) {
+	    			  return a[2] - b[2];
+	  			});			
+	      		testing_array.reverse();
+	      		setHtml(testing_array , 'tc');
+	    	}else if(var_getcategory == 'pih'){
+	    		hospital_array.sort(function(a, b) {
+	    			  return a[1] - b[1];
+	  			});			
+	    		hospital_array.reverse();
+	      		setHtml(hospital_array , 'pih');
+	    	}    	
+	    }else{
+	    	if(var_getcategory == 'c'){
+	    		
+	    		var arr = new Array();
+	    		cases_array.forEach(function(data){
+	    			var tmp1 = data[0];				
+	    			if( tmp1.substring(0,7) == var_getmonth ){
+	    				arr.push(data);
+	    			}
+	    		});
+	    		arr.sort(function(a, b) {
+	    			  return a[1] - b[1];
+				});			
+	    		arr.reverse();
+	    		setHtml(arr , 'c');    	
+	    		
+	    	}else if(var_getcategory == 't'){
+	    		
+	    		var arr = new Array();
+	    		testing_array.forEach(function(data){
+	    			var tmp1 = data[0];				
+	    			if( tmp1.substring(0,7) == var_getmonth ){
+	    				arr.push(data);
+	    			}
+	    		});
+	    		
+	    		arr.sort(function(a, b) {
+	  			  return a[3] - b[3];
+				});			
+	    		arr.reverse();
+	    		setHtml(arr , 't');
+	    		
+	    	}else if(var_getcategory == 'tc'){
+	    		
+	    		var arr = new Array();
+	    		testing_array.forEach(function(data){
+	    			var tmp1 = data[0];				
+	    			if( tmp1.substring(0,7) == var_getmonth ){
+	    				arr.push(data);
+	    			}
+	    		});
+	    		
+	    		arr.sort(function(a, b) {
+	    			  return a[2] - b[2];
+	  			});			
+	    		arr.reverse();
+	      		setHtml(arr , 'tc');
+	      		
+	    	}else if(var_getcategory == 'pih'){
+	    		
+	    		var arr = new Array();
+	    		hospital_array.forEach(function(data){
+	    			var tmp1 = data[0];				
+	    			if( tmp1.substring(0,7) == var_getmonth ){
+	    				arr.push(data);
+	    			}
+	    		});
+	    		arr.sort(function(a, b) {
+	    			  return a[1] - b[1];
+	  			});			
+	    		arr.reverse();
+	      		setHtml(arr , 'pih');
+	    	}  
+	    	
+	    } 
+	}
+
+	function setHtml(arr , type){
+		var_html = "";
+		if( type == 'c' ){
+			var_html += "<br><b>Cases</b>";
+			var_html += "<table><thead><tr><td width=150>date</td><td width=250>newCases</td></tr></thead> ";
+		}else if( type == 't' ){
+			var_html += "<br><b>Tests</b>";
+			var_html += "<table><thead><tr> ";
+			var_html += "<td width=150>date</td>";
+			var_html += "<td width=200>plannedPCRCapacity</td>";
+			var_html += "<td width=200>plannedAntibodyCapacity</td>";
+			var_html += "<td width=200>newPCRTests</td>";
+			var_html += "<td width=200>cumPCRTests</td>";
+			var_html += "<td width=200>newAntibodyTests</td>";
+			var_html += "<td width=200>cumAntibodyTests</td>";
+			var_html += "</tr></thead>";		
+		}else if( type == 'tc' ){
+			var_html += "<br><b>Test Capacity</b>";
+			var_html += "<table><thead><tr> ";
+			var_html += "<td width=150>date</td>";
+			var_html += "<td width=200>plannedPCRCapacity</td>";
+			var_html += "<td width=200>plannedAntibodyCapacity</td>";
+			var_html += "<td width=200>newPCRTests</td>";
+			var_html += "<td width=200>cumPCRTests</td>";
+			var_html += "<td width=200>newAntibodyTests</td>";
+			var_html += "<td width=200>cumAntibodyTests</td>";
+			var_html += "</tr></thead>";
+		}else if( type == 'pih' ){
+			var_html += "<br><b>Patients In Hospital</b>";
+			var_html += "<table><thead><tr><td width=150>date</td><td width=250>hospitalCases</td></tr></thead> ";
+		}
+		
+		for(var i=0 ; i < 10 ; i++){
+			if( type == 't' || type == 'tc'){
+				var_html += "<tr>";
+				var_html += "<td>"+arr[i][0]+"</td>";
+				var_html += "<td>"+arr[i][1]+"</td>";
+				var_html += "<td>"+arr[i][2]+"</td>";
+				var_html += "<td>"+arr[i][3]+"</td>";
+				var_html += "<td>"+arr[i][4]+"</td>";
+				var_html += "<td>"+arr[i][5]+"</td>";
+				var_html += "<td>"+arr[i][6]+"</td>";
+				var_html += "</tr>";
+			}else{
+				var_html += " <tr><td>"+arr[i][0]+"</td><td>"+arr[i][1]+"</td></tr> ";
+			}		
+		}
+		var_html += " </table> ";
+		$("#table01").html(var_html);
+	}	
+	
+	
+</script>
+</head>
+<body onload="getxml()">
+
+
+
 <br>
+<div>
+	Search for Covid Cases in UK by Month:
+	<br>
+	Choose Month :
+	<select name="getmonth" id="getmonth">
+	    <option value="all">all</option>
+	    <option value="01">Jan</option>
+	    <option value="02">Feb</option>
+	    <option value="03">Mar</option>
+	    <option value="04">Apr</option>
+	    <option value="05">May</option>
+	    <option value="06">Jun</option>
+	    <option value="07">Jul</option>
+	    <option value="08">Aug</option>
+	    <option value="09">Sep</option>
+	    <option value="10">Oct</option>
+	    <option value="11">Nov</option>
+	    <option value="12">Dec</option>	    
+	</select>
+	Choose Date :
+	<select name="gettype" id="gettype">
+	    <option value="mon">Monthly Data</option>
+	    <option value="day">Daily Average</option>
+	</select> 	
+	<button type="button"  onclick="search_month();">Search</button>	
+</div>
 <br>
-<a href="zdate.html">Search for Covid Cases in UK by Date</a>		
+<div>
+	Search for Covid Cases in UK by Date:
+	<br>
+	<input type='date' name='getdate' id="getdate" value="2020-06-15" />
+	Choose Search Option :
+	<select name="getcompare" id="getcompare">
+	    <option value="e">Equal</option>
+	    <option value="lt">Less Than</option>
+	    <option value="gt">Greater Than</option>
+	</select> 	
+	<button type="button" onclick="search_day()">Search</button>	
+</div>
 <br>
-<br>
-<a href="ztop10.html">Search By Top 10</a>
+<div>
+	Search for Covid Cases in UK by Top 10:
+	<br>
+	Choose Option :
+	<select name="getty" id="getty" onchange="chageSelect()">
+	    <option value="m">Month-Based</option>
+	    <option value="d">Date-Based</option>
+	</select>
+	<input type='month' name='getmon' id='getmon' value="2020-06" min="2020-01" max="2020-12" required>
+	Choose Categories :
+	<select name="getcategory" id="getcategory">
+	    <option value="c">Cases</option>
+	    <option value="t">Tests</option>
+	    <option value="tc">Test Capacity</option>
+	    <option value="pih">Patients In Hospital</option>
+	</select> 	
+	<button type="button" onclick="search_top()">Search</button>	
+</div>
+
+<br><br>
+<div id="table01">
+</div>
 </body>
 </html>
