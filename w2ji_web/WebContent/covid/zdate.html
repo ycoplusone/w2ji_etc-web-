@@ -3,8 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <title>Covid Case Search design</title>
+    <style>
+    table,th,td{
+    	border:1px solid gray;
+    	border-collapse:collapse;
+    	border-padding:10px;
+    	text-align : center;
+    }
+    </style>
+
+<script src="jquery.min.js"></script>
+<script>
+var var_getdate='';
+var var_getcompare='';
+
+
+var array = new Array();
+
+var var_html='';
+function search(){
+	console.log('search');
+	var_getdate = $("#getdate").val();
+	var_getcompare = $("#getcompare").val();
+	//console.log(var_getdate,' - ',var_getcompare);
+		
+	
+	var_html = "<table><thead><tr><td width=150>date</td><td width=250>newCasesByPublishDate</td></tr></thead> ";
+	var cnt = 0;
+	var total = 0;
+	
+	array.forEach(function(data){			
+		if( var_getcompare == 'e' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1 == var_getdate ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";
+			}
+		}else if( var_getcompare == 'lt' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1 <= var_getdate ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
+			}						
+		}else if( var_getcompare == 'gt' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1 >= var_getdate ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
+			}						
+		}
+	});
+	var_html += " </table> ";
+	$("#table01").html(var_html);
+	
+}
+
+
+function getxml(){
+	console.log('getxml');
+	$.ajax( {
+		url : 'cases.xml',
+		type : 'post',			
+		dataType : 'xml',
+		beforeSend : function() {},			
+		error : function( data ) {},
+		complete : function() {} ,
+		success : function( data ) {
+			var cnt = 0;
+			$(data).find('data').each(function(){
+				 var element = [];
+				 element[0] = $(this).find('date').text();
+				 element[1] = $(this).find('newCasesByPublishDate').text();
+				 array.push(element);
+				 
+			});
+			array.reverse();
+		}
+	});
+}
+</script>
+
 </head>
-<body>
+<body onload="getxml()">
 <!-- cases.xml 기준
 getdate를 받아서 getcompare와 비교하여 같거나 크거나 작은 일자의 데이터를 출력
 -->
@@ -15,16 +95,17 @@ Search for Covid Cases in UK by Date:
 </div>
 <br>
 <div>
-	<input type='date' name='getdate' value="2019-12-25" />
+	<input type='date' name='getdate' id="getdate" value="2020-06-15" />
 	Choose Search Option :
-	<select name="getcompare">
+	<select name="getcompare" id="getcompare">
 	    <option value="e">Equal</option>
 	    <option value="lt">Less Than</option>
 	    <option value="gt">Greater Than</option>
 	</select> 	
-	<button type="button">Search</button>	
+	<button type="button" onclick="search()">Search</button>	
 </div>
 <br><br>
-table
+<div id="table01">
+</div>
 </body>
 </html>

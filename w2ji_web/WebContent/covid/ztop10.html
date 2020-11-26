@@ -3,10 +3,298 @@
 <head>
 <meta charset="UTF-8">
 <title>Covid Case Search design</title>
+    <style>
+    table,th,td{
+    	border:1px solid gray;
+    	border-collapse:collapse;
+    	border-padding:10px;
+    	text-align : center;
+    }
+    </style>
+
+<script src="jquery.min.js"></script>
+<script>
+var var_gettype='';
+var var_getcategory='';
+var var_getmonth='';
+
+
+var cases_array = new Array();
+var hospital_array = new Array();
+var testing_array = new Array();
+
+
+var var_html='';
+function search(){
+	console.log('search');
+	var_gettype = $("#gettype option:selected").val();
+	var_getcategory = $("#getcategory option:selected").val();
+	var_getmonth = $("#getmonth").val();
+	console.log(var_gettype,' - ',var_getcategory);		
+    /*
+	<option value="c">Cases</option>
+    <option value="t">Tests</option>
+    <option value="tc">Test Capacity</option>
+    <option value="pih">Patients In Hospital</option>
+    */    
+    
+    if(var_gettype =='d'){
+    	if(var_getcategory == 'c'){
+    		cases_array.sort(function(a, b) {
+    			  return a[1] - b[1];
+			});			
+    		cases_array.reverse();
+    		setHtml(cases_array , 'c');    		
+    	}else if(var_getcategory == 't'){
+    		testing_array.sort(function(a, b) {
+  			  return a[3] - b[3];
+			});			
+    		testing_array.reverse();
+    		setHtml(testing_array , 't');  			
+    	}else if(var_getcategory == 'tc'){
+    		testing_array.sort(function(a, b) {
+    			  return a[2] - b[2];
+  			});			
+      		testing_array.reverse();
+      		setHtml(testing_array , 'tc');
+    	}else if(var_getcategory == 'pih'){
+    		hospital_array.sort(function(a, b) {
+    			  return a[1] - b[1];
+  			});			
+    		hospital_array.reverse();
+      		setHtml(hospital_array , 'pih');
+    	}    	
+    }else{
+    	if(var_getcategory == 'c'){
+    		
+    		var arr = new Array();
+    		cases_array.forEach(function(data){
+    			var tmp1 = data[0];				
+    			if( tmp1.substring(0,7) == var_getmonth ){
+    				arr.push(data);
+    			}
+    		});
+    		arr.sort(function(a, b) {
+    			  return a[1] - b[1];
+			});			
+    		arr.reverse();
+    		setHtml(arr , 'c');    	
+    		
+    	}else if(var_getcategory == 't'){
+    		
+    		var arr = new Array();
+    		testing_array.forEach(function(data){
+    			var tmp1 = data[0];				
+    			if( tmp1.substring(0,7) == var_getmonth ){
+    				arr.push(data);
+    			}
+    		});
+    		
+    		arr.sort(function(a, b) {
+  			  return a[3] - b[3];
+			});			
+    		arr.reverse();
+    		setHtml(arr , 't');
+    		
+    	}else if(var_getcategory == 'tc'){
+    		
+    		var arr = new Array();
+    		testing_array.forEach(function(data){
+    			var tmp1 = data[0];				
+    			if( tmp1.substring(0,7) == var_getmonth ){
+    				arr.push(data);
+    			}
+    		});
+    		
+    		arr.sort(function(a, b) {
+    			  return a[2] - b[2];
+  			});			
+    		arr.reverse();
+      		setHtml(arr , 'tc');
+      		
+    	}else if(var_getcategory == 'pih'){
+    		
+    		var arr = new Array();
+    		hospital_array.forEach(function(data){
+    			var tmp1 = data[0];				
+    			if( tmp1.substring(0,7) == var_getmonth ){
+    				arr.push(data);
+    			}
+    		});
+    		arr.sort(function(a, b) {
+    			  return a[1] - b[1];
+  			});			
+    		arr.reverse();
+      		setHtml(arr , 'pih');
+    	}  
+    	
+    } 
+    
+    
+	
+	
+	/*
+	var_html = "<table><thead><tr><td width=150>date</td><td width=250>newCasesByPublishDate</td></tr></thead> ";
+	var cnt = 0;
+	var total = 0;
+	
+	array.forEach(function(data){			
+		if( var_getcompare == 'e' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1 == var_getdate ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";
+			}
+		}else if( var_getcompare == 'lt' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1 <= var_getdate ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
+			}						
+		}else if( var_getcompare == 'gt' ){
+			var tmp1 = data[0];
+			var tmp2 = data[1];
+			if( tmp1 >= var_getdate ){
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
+			}						
+		}
+	});
+	var_html += " </table> ";
+	$("#table01").html(var_html);*/
+	
+}
+
+function setHtml(arr , type){
+	var_html = "";
+	if( type == 'c' ){
+		var_html += "<br><b>Cases</b>";
+		var_html += "<table><thead><tr><td width=150>date</td><td width=250>newCases</td></tr></thead> ";
+	}else if( type == 't' ){
+		var_html += "<br><b>Tests</b>";
+		var_html += "<table><thead><tr> ";
+		var_html += "<td width=150>date</td>";
+		var_html += "<td width=200>plannedPCRCapacity</td>";
+		var_html += "<td width=200>plannedAntibodyCapacity</td>";
+		var_html += "<td width=200>newPCRTests</td>";
+		var_html += "<td width=200>cumPCRTests</td>";
+		var_html += "<td width=200>newAntibodyTests</td>";
+		var_html += "<td width=200>cumAntibodyTests</td>";
+		var_html += "</tr></thead>";		
+	}else if( type == 'tc' ){
+		var_html += "<br><b>Test Capacity</b>";
+		var_html += "<table><thead><tr> ";
+		var_html += "<td width=150>date</td>";
+		var_html += "<td width=200>plannedPCRCapacity</td>";
+		var_html += "<td width=200>plannedAntibodyCapacity</td>";
+		var_html += "<td width=200>newPCRTests</td>";
+		var_html += "<td width=200>cumPCRTests</td>";
+		var_html += "<td width=200>newAntibodyTests</td>";
+		var_html += "<td width=200>cumAntibodyTests</td>";
+		var_html += "</tr></thead>";
+	}else if( type == 'pih' ){
+		var_html += "<br><b>Patients In Hospital</b>";
+		var_html += "<table><thead><tr><td width=150>date</td><td width=250>hospitalCases</td></tr></thead> ";
+	}
+	
+	for(var i=0 ; i < 10 ; i++){
+		if( type == 't' || type == 'tc'){
+			var_html += "<tr>";
+			var_html += "<td>"+arr[i][0]+"</td>";
+			var_html += "<td>"+arr[i][1]+"</td>";
+			var_html += "<td>"+arr[i][2]+"</td>";
+			var_html += "<td>"+arr[i][3]+"</td>";
+			var_html += "<td>"+arr[i][4]+"</td>";
+			var_html += "<td>"+arr[i][5]+"</td>";
+			var_html += "<td>"+arr[i][6]+"</td>";
+			var_html += "</tr>";
+		}else{
+			var_html += " <tr><td>"+arr[i][0]+"</td><td>"+arr[i][1]+"</td></tr> ";
+		}		
+	}
+	var_html += " </table> ";
+	$("#table01").html(var_html);
+}
+
+
+function getxml(){
+
+	$.ajax( {
+		url : 'cases.xml',
+		type : 'post',			
+		dataType : 'xml',
+		beforeSend : function() {},			
+		error : function( data ) {},
+		complete : function() {} ,
+		success : function( data ) {
+			var cnt = 0;
+			$(data).find('data').each(function(){
+				 var element = [];
+				 element[0] = $(this).find('date').text();
+				 element[1] = $(this).find('newCasesByPublishDate').text();
+				 cases_array.push(element);				 
+			});
+			cases_array.reverse();
+		}
+	});
+	
+	$.ajax( {
+		url : 'hospital.xml',
+		type : 'post',			
+		dataType : 'xml',
+		beforeSend : function() {},			
+		error : function( data ) {},
+		complete : function() {} ,
+		success : function( data ) {
+			var cnt = 0;
+			$(data).find('data').each(function(){
+				 var element = [];
+				 element[0] = $(this).find('date').text();
+				 element[1] = $(this).find('hospitalCases').text();
+				 hospital_array.push(element);				 
+			});
+			hospital_array.reverse();
+		}
+	});
+	
+	$.ajax( {
+		url : 'testing.xml',
+		type : 'post',			
+		dataType : 'xml',
+		beforeSend : function() {},			
+		error : function( data ) {},
+		complete : function() {} ,
+		success : function( data ) {
+			var cnt = 0;
+			$(data).find('data').each(function(){
+				 var element = [];
+				 element[0] = $(this).find('date').text();
+				 element[1] = $(this).find('plannedPCRCapacityByPublishDate').text();
+				 element[2] = $(this).find('plannedAntibodyCapacityByPublishDate').text();
+				 element[3] = $(this).find('newPCRTestsByPublishDate').text();
+				 element[4] = $(this).find('cumPCRTestsByPublishDate').text();
+				 element[5] = $(this).find('newAntibodyTestsByPublishDate').text();
+				 element[6] = $(this).find('cumAntibodyTestsByPublishDate').text();
+				 testing_array.push(element);				 
+			});
+			testing_array.reverse();
+		}
+	});	
+	
+	
+}
+
+function chageSelect(){
+	var tt = $("#gettype option:selected").val();
+	if(tt=='m'){
+		$("#getmonth").show()
+	}else{
+		$("#getmonth").hide()
+	}
+}
+
+</script>
 </head>
-<body>
-<!--  
--->
+<body onload="getxml()">
 <a href="index.html">GoTo index</a>
 <br>
 <div>
@@ -15,22 +303,23 @@ Search for Covid Cases in UK by Top 10:
 <br>
 <div>
 	Choose Option :
-	<select name="gettype">
+	<select name="gettype" id="gettype" onchange="chageSelect()">
 	    <option value="m">Month-Based</option>
 	    <option value="d">Date-Based</option>
 	</select>
-	<input type='date' name='getdate' value="2019-12-25"/>
+	<input type='month' name='getmonth' id='getmonth' value="2020-06" min="2020-01" max="2020-12" required>
 	Choose Categories :
-	<select name="getcategory">
+	<select name="getcategory" id="getcategory">
 	    <option value="c">Cases</option>
 	    <option value="t">Tests</option>
 	    <option value="tc">Test Capacity</option>
 	    <option value="pih">Patients In Hospital</option>
 	</select> 	
-	<button type="button">Search</button>	
+	<button type="button" onclick="search()">Search</button>	
 </div>
 <br><br>
-table
+<div id="table01">
+</div>
 
 </body>
 </html>

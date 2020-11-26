@@ -8,6 +8,8 @@
     table,th,td{
     	border:1px solid gray;
     	border-collapse:collapse;
+    	border-padding:10px;
+    	text-align : center;
     }
     </style>
 
@@ -19,6 +21,8 @@
 	var var_month_txt='';
 	var var_type_txt='';
 	
+	var array = new Array();
+	
 	var var_html='';
 	function search(){
 		console.log('search');
@@ -28,9 +32,43 @@
 		var_month_txt = $("#getmonth option:selected").text();
 		var_type_txt = $("#gettype option:selected").text();
 		
-		getxml();
-	}
-	
+		var_html = "<table><thead><tr><td width=150>"+var_month_txt+"</td><td width=250>"+var_type_txt+"</td></tr></thead> ";
+		var cnt = 0;
+		var total = 0;
+		
+		array.forEach(function(data){			
+			if( var_month == 'all' && var_type == 'mon' ){
+				var tmp1 = data[0];
+				var tmp2 = data[1];
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";	
+			}else if( var_month != 'all' && var_type == 'mon' ){
+				var tmp1 = data[0];
+				var tmp2 = data[1];
+				if( tmp1.substring(5,7) == var_month ){
+					var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";							
+				}						
+			}else if( var_month == 'all' && var_type != 'mon' ){
+				var tmp1 = data[0];
+				var tmp2 = data[1];
+				total += Number( tmp2 );
+				cnt ++;
+				var tmp3 = tmp2 +"( "+ Math.round(total / cnt)+" )";
+				var_html += " <tr><td>"+tmp1+"</td><td>"+tmp3+"</td></tr> ";						
+			}else if( var_month != 'all' && var_type != 'mon' ){
+				var tmp1 = data[0];
+				var tmp2 = data[1];
+				if( tmp1.substring(5,7) == var_month ){
+					total += Number( tmp2 );
+					cnt ++;
+					var tmp3 = tmp2 +"( "+ Math.round(total / cnt)+" )";
+					var_html += " <tr><td>"+tmp1+"</td><td>"+tmp3+"</td></tr> ";	
+				}								
+			}
+		});
+		var_html += " </table> ";
+		$("#table01").html(var_html);
+		
+	}	
 	
 	function getxml(){
 		console.log('getxml');
@@ -42,24 +80,26 @@
 			error : function( data ) {},
 			complete : function() {} ,
 			success : function( data ) {
-				var_html = "<table><thead><tr><td>Monthly</td><td>"+var_type_txt+"</td></tr></thead> ";
+				var cnt = 0;
 				$(data).find('data').each(function(){
-					var tmp1 = $(this).find('date').text();
-					var tmp2 = $(this).find('newCasesByPublishDate').text();
-					var_html += " <tr><td>"+tmp1+"</td><td>"+tmp2+"</td></tr> ";					
-					console.log(tmp1,tmp2);
+					 var element = [];
+					 element[0] = $(this).find('date').text();
+					 element[1] = $(this).find('newCasesByPublishDate').text();
+					 //element.push($(this).find('date').text());
+					 //element.push($(this).find('newCasesByPublishDate').text());
+					 array.push(element);
+					 
 				});
-				var_html += " </table> ";
-				console.log(var_html);
-				
+				array.reverse();
 			}
-		});		
-		$("#table01").html('sdfsdf');
+		});
 	}
+	
+	
 	
 </script>
 </head>
-<body>
+<body onload="getxml()">
 <!-- 
 cases.xml 기준으로 
 
@@ -76,15 +116,15 @@ Search for Covid Cases in UK by Month:
 	Choose Month :
 	<select name="getmonth" id="getmonth">
 	    <option value="all">all</option>
-	    <option value="1">Jan</option>
-	    <option value="2">Feb</option>
-	    <option value="3">Mar</option>
-	    <option value="4">Apr</option>
-	    <option value="5">May</option>
-	    <option value="6">Jun</option>
-	    <option value="7">Jul</option>
-	    <option value="8">Aug</option>
-	    <option value="9">Sep</option>
+	    <option value="01">Jan</option>
+	    <option value="02">Feb</option>
+	    <option value="03">Mar</option>
+	    <option value="04">Apr</option>
+	    <option value="05">May</option>
+	    <option value="06">Jun</option>
+	    <option value="07">Jul</option>
+	    <option value="08">Aug</option>
+	    <option value="09">Sep</option>
 	    <option value="10">Oct</option>
 	    <option value="11">Nov</option>
 	    <option value="12">Dec</option>	    
@@ -98,11 +138,6 @@ Search for Covid Cases in UK by Month:
 </div>
 <br><br>
 <div id="table01">
-	<!-- table style="border:1px solid gray; border-collapse:collapse;">
-		<thead>
-			<tr><td id="head1">Monthly</td><td id="head2">value</td></tr>
-		</thead>
-	</table-->
 </div>
 </body>
 </html>
