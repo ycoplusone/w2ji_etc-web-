@@ -59,10 +59,11 @@ var var_html='';
 		console.log('메뉴 등록');
 		wonder7_array.forEach(function(data){			
 			$("#w7_"+data[0]).html("<b>"+data[1]+"</b><br><img src='"+data[4]+"' width='150px' height='150px'>");
+			$("#w7_"+data[0]).attr("onClick", "goDetail('"+data[0]+"');");
+			
 		});
 	}// end setMenu
-	
-	
+		
 	function setHtml(){}	
 	
 	function home(){
@@ -78,6 +79,8 @@ var var_html='';
 	function goDetail(seq){
 		location.href="detail.html?seq="+seq;
 	}	
+	
+	
 </script>
 </head>
 <body onload="getxml()">
@@ -94,13 +97,13 @@ var var_html='';
 <div class="card bg-secondary mb-3" style="max-width: 100%;">
   <div class="card-header text-center">New Seven Wonders of the World</div>  
 	<div class="btn-group" role="group" aria-label="Basic example" >
-	  <button type="button" class="btn btn-secondary" id="w7_1" style="height : 250px;" onClick="goDetail(1)">1</button>
-	  <button type="button" class="btn btn-secondary" id="w7_2" style="height : 250px;" onClick="goDetail(2)">2</button>
-	  <button type="button" class="btn btn-secondary" id="w7_3" style="height : 250px;" onClick="goDetail(3)">3</button>
-	  <button type="button" class="btn btn-secondary" id="w7_4" style="height : 250px;" onClick="goDetail(4)">4</button>
-	  <button type="button" class="btn btn-secondary" id="w7_5" style="height : 250px;" onClick="goDetail(5)">5</button>
-	  <button type="button" class="btn btn-secondary" id="w7_6" style="height : 250px;" onClick="goDetail(6)">6</button>
-	  <button type="button" class="btn btn-secondary" id="w7_7" style="height : 250px;" onClick="goDetail(7)">7</button>
+	  <button type="button" class="btn btn-secondary" id="w7_1" style="height : 250px;">1</button>
+	  <button type="button" class="btn btn-secondary" id="w7_2" style="height : 250px;">2</button>
+	  <button type="button" class="btn btn-secondary" id="w7_3" style="height : 250px;">3</button>
+	  <button type="button" class="btn btn-secondary" id="w7_4" style="height : 250px;">4</button>
+	  <button type="button" class="btn btn-secondary" id="w7_5" style="height : 250px;">5</button>
+	  <button type="button" class="btn btn-secondary" id="w7_6" style="height : 250px;">6</button>
+	  <button type="button" class="btn btn-secondary" id="w7_7" style="height : 250px;">7</button>
 	</div>    
 </div>
 
