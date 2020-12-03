@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Covid Case Search design</title>
+<link href="bootstrap.min.css" rel="stylesheet">
+<script src="jquery.min.js"></script>
+<script>
+
+var wonder7_array = new Array();
+var var_html='';
+	
+	function getxml(){
+		$.ajax( {
+			url : 'wonder7.xml',
+			type : 'post',			
+			dataType : 'xml',
+			beforeSend : function() {},			
+			error : function( data ) {},
+			complete : function() {} ,
+			success : function( data ) {
+				var cnt = 0;
+				$(data).find('data').each(function(){
+					 var element = [];
+					 element[0] = $(this).find('seq').text();
+					 element[1] = $(this).find('title').text();
+					 element[2] = $(this).find('subtitle').text();
+					 element[3] = $(this).find('subscript').text();
+					 element[4] = $(this).find('img').text();
+					 wonder7_array.push(element);				 
+				});
+				setDetail( getParameterByName('seq') );
+			}
+		});		
+	}// end getxml
+	
+	function setDetail(str){		
+		wonder7_array.forEach(function(data){			
+			if( data[0] == str ){
+				$("#w7_title").html("<h1>"+data[1]+"</h1>");
+				$("#w7_img").attr("src", data[4]);
+				$("#w7_content").html("<h4>"+data[2]+"</h4><br><br>"+data[3]);
+			}
+		});
+	}		
+	
+	function home(){
+		console.log('home');
+		location.href="index.html";
+	}
+	
+	function back(){
+		console.log('back');
+		history.back();
+	}
+	
+	function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+	
+	
+</script>
+</head>
+<body onload="getxml()">
+<nav class="navbar navbar-light  bg-primary">
+   <button type="button" class="btn btn-secondary float-left" onClick="home();">Home</button>
+     <div class="text-center">
+       <!-- button type="button" class="btn btn-danger">Cancel</button>
+       <button type="button" class="btn btn-secondary"">Save and Exit</button-->
+       <p class="text-warning">(박재균 김예원 백경민)</p>
+     </div>
+     <button type="button" class="btn btn-secondary float-right" onClick="back();">Back</button>    
+</nav>
+<br>
+
+
+<div class="card border-secondary mb-3" style="max-width: 100%;">
+	<div class="card-header" id="w7_title">Header</div>
+	<div class="card-body">
+		<table class="table table-hover">
+			<tbody>
+				<tr class="table-active">
+					<td><img id="w7_img" src="wonder7-6.jpg" width="250px" height="400px"></td>
+					<td id="w7_content">0</td>
+				</tr>
+			</tbody>
+		</table>	
+		
+	</div>
+</div>
+
+
+<footer class="footer text-center navbar-light  bg-primary">
+	<div class="text-warning">Copyright 2020 all right reserved.</div>
+</footer>
+</body>
+</html>
