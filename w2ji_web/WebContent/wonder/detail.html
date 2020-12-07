@@ -5,12 +5,14 @@
 <title>Covid Case Search design</title>
 <link href="bootstrap.min.css" rel="stylesheet">
 <script src="jquery.min.js"></script>
+<script src="values.js"></script>
 <script>
 
 var wonder7_array = new Array();
 var var_html='';
 	
 	function getxml(){
+		/*
 		$.ajax( {
 			url : 'wonder7.xml',
 			type : 'post',			
@@ -30,8 +32,10 @@ var var_html='';
 					 wonder7_array.push(element);				 
 				});
 				setDetail( getParameterByName('seq') );
-			}
-		});		
+			}			
+		});	*/
+		wonder7_array = window.value;
+		setDetail( getParameterByName('seq') );
 	}// end getxml
 	
 	function setDetail(str){		
