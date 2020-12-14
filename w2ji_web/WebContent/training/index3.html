@@ -26,8 +26,8 @@
 var locationx = 1;
 var locationy = -1;
 var speed = 1;
-var sound_time_chk =0; 
-var countdown_start = false;
+
+
 
 (function (cjs, an) {
 var p; // shortcut to reference prototypes
@@ -614,7 +614,7 @@ p.nominalBounds = new cjs.Rectangle(-1,-1,157.5,44.8);
 	
 	// Layer_1
 	this.shape_2 = new cjs.Shape();	
-	this.shape_2.graphics.f("#0000FF").s().p("Ar/DDIAAmFIX/AAIAAGFg");
+	this.shape_2.graphics.f("#000000").s().p("Ar/DDIAAmFIX/AAIAAGFg");
 	this.shape_2.setTransform(0 ,15 );
 	this.timeline.addTween(cjs.Tween.get({}).to({state:[ {t:this.shape_2} ]}).wait(1));
 	
@@ -795,9 +795,9 @@ p.nominalBounds = new cjs.Rectangle(-1,-1,157.5,44.8);
 			} else if(chk4) {
 				console.log('rn3 before',rn3);
 				rn3 = (speed * 6);
-
 				console.log('rn3 after',rn3);
 				imsin = 0;
+				sound_time_chk =1;
 				this.sagag.gotoAndStop(1);
 			}else {
 				if (sound_chk) {
@@ -879,40 +879,11 @@ p.nominalBounds = new cjs.Rectangle(-1,-1,157.5,44.8);
 		function sagagDownHandler() {
 			this.sagag.visible = false;
 			console.log('사각');
-			//chk1 = false
-			//chk2 = false
-			//this.ball.gotoAndStop(5);
-			sound_time_chk =0;
+			sound_time_chk = 1;
 			this.numberOutput.text = Math.floor(n / 0.12) + " ms"
-			this.sagag.txt.color = "#"+Math.round(Math.random() * 0xffffff).toString(16);
-			
-			
-			/*n_num += 1
-			tot += Math.floor(n / 0.12)
-			txt1 += n_num + " : " + Math.floor(n / 0.12) + " ms" + "\r"
-			this.ntxt.text = txt1
-			*/
+			n_num += 1
 			n = 0;
 			imsin = 0;
-			//다시 도전 준비
-			/*
-			if (n_num < 10) {
-				//chk1 = true
-				//rn3 = Math.floor(Math.random() * 400) + 250;
-				imsin = 0				
-				this.sagag.gotoAndStop(2);				
-			} else {
-				//5번 다 끝나면
-				sound_time_chk =3000;
-				var tot1 = tot / 10;
-				var gab = Math.floor((4.9 * tot1 * tot1) / 1000) / 10 + "cm";
-				txt1 += "\r" + " 평균  : " + tot / 10 + " ms" + "\r" + "자이동거리 : " + gab;
-				this.ntxt.text = txt1;
-				this.btn1.visible = true;
-				btns20_toggle(this,true);
-				//this.ball.gotoAndStop(5);
-			}*/
-			
 		} //자신 end		
 		
 		
@@ -928,14 +899,18 @@ p.nominalBounds = new cjs.Rectangle(-1,-1,157.5,44.8);
 		var chk3 = false
 		// 자신
 		var chk4 = false
+		
 		var sound_chk = false
+		var sound_time_chk = 1; 
+		var countdown_start = false;
+		
 		this.ball1.x = 3000;
 		//var id
 		this.addEventListener("tick", enterframehandler.bind(this));
 		
 		function enterframehandler() {
 			//console.log('enterframehandler',imsin,rn , rn1 , rn2 , rn3);
-			//고급
+			//고급						
 			if (chk3) {
 				if (chk1) {
 					imsin += 1
@@ -956,18 +931,20 @@ p.nominalBounds = new cjs.Rectangle(-1,-1,157.5,44.8);
 				}
 			} else if ( chk4 ){
 				
-				sound_time_chk +=1;
-				if(sound_time_chk<=300 && this.countdown_start){
-					//console.log( 'sound_time_chk /60 : ',sound_time_chk  / 60 );
-					this.countdown.text = Math.round(sound_time_chk  / 60,0);
+				sound_time_chk +=1;				
+				var five = n_num==0?5:5;
+				var t_val = five + ( Math.round( sound_time_chk / 60  ,0) * -1);
+				if(sound_time_chk<240 && this.countdown_start){
+					///console.log( 'sound_time_chk /60 : ',sound_time_chk  / 60 );
+					
+					this.countdown.text = t_val;//t_val==6?5:t_val;
 					this.countdown.visible = true;					
 					
-				}else if( sound_time_chk == 310 ){
+				}else if( sound_time_chk == 240 ){
 					playSound("beep");
-					this.countdown.text = "1";
-					this.countdown.visible = false;
-					
-				}else if ( sound_time_chk > 310 ){
+					this.countdown.text = "5";
+					this.countdown.visible = false;					
+				}else if ( sound_time_chk > 240 ){
 					imsin += 1;				
 					if( imsin == rn3 ) {
 						n =0;
@@ -975,7 +952,7 @@ p.nominalBounds = new cjs.Rectangle(-1,-1,157.5,44.8);
 						this.sagag.visible = true;
 						this.sagag.y =  stage.canvas.height*0.5;					
 					}				
-					this.sagag.y = this.sagag.y + ( 3 * locationy  );
+					this.sagag.y = this.sagag.y + ( 4.5 * locationy  );
 					if( this.sagag.y < stage.canvas.height*0.15  ){
 						this.sagag.y =  stage.canvas.height*0.15;
 					}						
@@ -1408,7 +1385,7 @@ p.nominalBounds = new cjs.Rectangle(-1,-1,157.5,44.8);
 	/*큰 사각형*/
 	this.sagag = new lib.사각();
 	this.sagag.parent = this;
-	this.sagag.txt.text = "누르세요.";
+	this.sagag.txt.text = "";
 	this.sagag.txt.color = "#FFFFFF";
 	//this.sagag.setTransform(350 ,0 , 1 , 2 );
 	this.sagag.setTransform(350 ,9 ,0.700,1.4,0,0,0,0,-0.1);
@@ -1487,7 +1464,7 @@ lib.properties = {
 	color: "#FFFFFF",
 	opacity: 1.00,
 	manifest: [
-		{src:"images/Bitmap2.jpg?1598180248957", id:"Bitmap2"},
+		//{src:"images/Bitmap2.jpg?1598180248957", id:"Bitmap2"},
 		{src:"sounds/beep.mp3?1598180248957", id:"beep"}
 	],
 	preloads: []
