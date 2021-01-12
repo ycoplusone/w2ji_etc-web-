@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>변경</title>
+<script src="jquery.min.js"></script>
+<script language = "javascript">
+var var_txt1 ="";
+
+function convert(){
+	console.log('start - convert');
+	var_txt1 = $("#txt1").val();
+	
+	var_startnum = parseInt( $("#startnum").val() );
+	var_t1 = $("#t1").val();
+	var_t2 = $("#t2").val();
+	var_t3 = $("#t3").val();
+	
+	console.log('var_txt1',var_txt1);
+	
+	console.log('var_startnum',var_startnum+1);
+	console.log('var_t1',var_t1);
+	console.log('var_t2',var_t2);
+	console.log('var_t3',var_t3);
+	
+	
+	if( var_t1 != ''  ){
+		var i = var_startnum;
+		for(var j=0 ; j<1000;j++){
+			console.log(j);
+			var_txt1 = var_txt1.replace( var_t1 , "<font color='red'>["+i+"]</font>");
+			i++;
+		}	
+		
+	}
+	
+	
+	console.log('var_txt1',var_txt1);
+	
+	
+	$("#txt2").html(var_txt1);
+	
+	
+}
+
+</script>
+
+</head>
+<body>
+
+<table>
+	<tr>
+		<td align="center">변경전</td>
+		<td align="center">변경후</td>
+	</tr>
+	<tr>
+		<td>
+			<textarea id="txt1" style="resize:none;width:700px;height:300px"></textarea>
+		</td>
+		<td style="border: 4px dashed #bcbcbc;width:700px">
+			<div id="txt2" ></div>
+		</td>
+	</tr>
+</table>
+
+<table>
+	<tr>
+		<td>시작번호 : <br><input type="text" id="startnum" value="0" /></td>
+		<td>문자1 : <br><input type="text" id="t1"  /></td>
+		<td>문자2 : <br><input type="text" id="t2"  /></td>
+		<td>문자3 : <br><input type="text" id="t3"  /></td>
+	</tr>
+</table>
+<br>
+<center>
+<button onclick="convert()" style="width:100px;height:50px">변환</button>
+</center>
+
+
+
+
+</body>
+</html>
