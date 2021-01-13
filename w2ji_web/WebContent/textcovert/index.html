@@ -26,13 +26,32 @@ function convert(){
 	
 	if( var_t1 != ''  ){
 		var i = var_startnum;
-		for(var j=0 ; j<1000;j++){
-			console.log(j);
+		while(var_txt1.indexOf(var_t1) != -1){
+		//for(var j=0 ; j<1000;j++){			
 			var_txt1 = var_txt1.replace( var_t1 , "<font color='red'>["+i+"]</font>");
 			i++;
-		}	
-		
+		}
 	}
+		
+	if( var_t2 != ''  ){
+		var i = var_startnum;
+		while(var_txt1.indexOf(var_t2) != -1){
+		//for(var j=0 ; j<1000;j++){			
+			var_txt1 = var_txt1.replace( var_t2 , "<font color='blue'>["+i+"]</font>");
+			i++;
+		}
+	}	
+
+	if( var_t3 != ''  ){
+		var i = var_startnum;
+		while(var_txt1.indexOf(var_t3) != -1){
+		//for(var j=0 ; j<1000;j++){			
+			var_txt1 = var_txt1.replace( var_t3 , "<font color='green'>["+i+"]</font>");
+			i++;
+		}
+	}		
+	var_txt1 = var_txt1.replaceAll( '\n' , "<br>");
+	
 	
 	
 	console.log('var_txt1',var_txt1);
@@ -55,7 +74,12 @@ function convert(){
 	</tr>
 	<tr>
 		<td>
-			<textarea id="txt1" style="resize:none;width:700px;height:300px"></textarea>
+			<textarea id="txt1" style="resize:none;width:700px;height:300px">동서양 고전을 넘나드는★ 이 책은 인간이 삶에서 필연적으로 맞닥뜨리는 핵심 화두를 살핀다.
+♣ 명예, 행복, 부, 정의, 공동체, 죽음, 분노... 번갈아가며, 혹은 동시다발적으로◆ 
+우리의 머리를 괴롭히는 키워드들이다.★ 
+마음을 다잡는다고 해서 돌부처처럼 흔들리지 않을 수는 없겠지만 
+흔들릴 때마다 다시 토대를 다진다면 나름의 곧은 길을 걸을 수 있을 것이다.
+★ 두 학자들이 던지는◆ 질문들 안에서 자신을 잘 찾아보길 바란다.♣</textarea>
 		</td>
 		<td style="border: 4px dashed #bcbcbc;width:700px">
 			<div id="txt2" ></div>
